@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Room</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<h2>User Room</h2>
+<ul style="display: flex">
+    <li style="width: 20%"><a href="/index">Index</a></li>
+    <li style="width: 20%"><a href="/producers">Search Manufacturing</a></li>
+    <li style="width: 20%"><a href="/orders">Search Order</a></li>
+    <li style="width: 20%"><a href="/create_order">Create Order</a></li>
+    <li style="width: 20%"><a href="/user_room">User Room</a></li>
+</ul>
+<% if (validation) {%>
+<h2>Hello, <%= username %>!</h2>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"> Change my personal data </button>
+<% if (producer_already_existed) {%>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2"> Update your manufacture </button>
+<% } else {%>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2"> Add your manufacture </button>
+<% }%>
+<button type="button" class="btn btn-primary" onclick="openOrdersHistory()"> Orders History </button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3"> Change Password </button>
+<button type="button" class="btn btn-primary" onclick="deleteCookies()"> Logout </button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel1">Personal data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <p>Phone: <input type="text" name="" id="phone_number" value="<%= phone %>"/></p>
+                    <p>Name: <input type="text" name="" id="name" value="<%= name %>"/></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="setNewPersonalData()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Producer data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <p>Name of your manufacture: <input type="text" name="" id="producer_name" value="<%=producer_name%>"/></p>
+                    <p>Region:
+                        <select id="region_id">
+                            <% for (var i = 0; i < regions.length; i++) { %>
+                            <% if (regions[i].id === region_id) {%>
+                            <option value="<%= regions[i].id%>" selected><%= regions[i].region_name%></option>
+                            <%} else {%>
+                            <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </p>
+                    <div><h5>Types:</h5>
+                        <% for (var i = 0; i < types.length; i++) { %>
+                        <p><%= types[i].name %>:  <input type="checkbox" name="producer_types" value="<%= types[i].id %>"
+                            <% if (types[i].check) {%>
+                            checked
+                            <%}%>
+                        /></p>
+                        <% } %>
+                    </div>
+                    <div><h5>Steps:</h5>
+                        <% for (var i = 0; i < steps.length; i++) { %>
+                        <p><%= steps[i].name %>:  <input type="checkbox" name="producer_steps" value="<%= steps[i].id %>"
+                            <% if (steps[i].check) {%>
+                            checked
+                            <%}%>/></p>
+                        <% } %>
+                    </div>
+                    <p>Description:
+                        <textarea id="description" name="description" rows="7" cols="48" placeholder="Enter description.">
+                        </textarea>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <% if (producer_already_existed) {%>
+                <button type="button" class="btn btn-primary" onclick="updateManufacture()">Update Manufacture</button>
+                <%} else {%>
+                <button type="button" class="btn btn-primary" onclick="createManufacture()">Create Manufacture</button>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <p>Old Password: <input type="text" name="" id="old_password" value=""/></p>
+                    <p>New Password: <input type="text" name="" id="new_password" value=""/></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="changePassword()">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%} else {%>
+<h3>You are not logined, please login or create account.</h3>
+<ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/registration">SignUp</a></li>
+</ul>
+<% } %>
+</body>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    function deleteCookies(){
+        document.cookie = 'token=nothing';
+        window.location.reload();
+    }
+
+    function setNewPersonalData() {
+        $.ajax({
+            url: '/set_new_user_data',
+            type: 'POST',
+            data: {
+                phone_number: document.getElementById('phone_number').value,
+                name: document.getElementById('name').value
+            },
+            success: (data) => {
+                if (data === 200) {
+                    window.location.replace('/user_room');
+                } else {
+                    window.alert("Wrong password or email!");
+                }
+            }
+        });
+    }
+
+    function createManufacture() {
+        let types = document.getElementsByName('producer_types');
+        let steps = document.getElementsByName('producer_steps');
+        let types_for_request = [];
+        let steps_for_request = [];
+        for (let i = 0; i < types.length; i++){
+            if (types[i].checked){
+                types_for_request.push(types[i].getAttribute('value'));
+            }
+        }
+        for (let i = 0; i < steps.length; i++){
+            if (steps[i].checked){
+                steps_for_request.push(steps[i].getAttribute('value'));
+            }
+        }
+        $.ajax({
+            url: '/create_manufacture',
+            type: 'POST',
+            data: {
+                producer_name: document.getElementById('producer_name').value,
+                description: document.getElementById('description').value,
+                region_id: document.getElementById('region_id').value,
+                steps: steps_for_request,
+                types: types_for_request
+            },
+            success: (data) => {
+                if (data === 200) {
+                    window.location.replace('/user_room');
+                } else {
+                    window.alert("You can't!");
+                }
+            }
+        });
+    }
+
+    function updateManufacture() {
+        let types = document.getElementsByName('producer_types');
+        let steps = document.getElementsByName('producer_steps');
+        let types_for_request = [];
+        let steps_for_request = [];
+        for (let i = 0; i < types.length; i++){
+            if (types[i].checked){
+                types_for_request.push(types[i].getAttribute('value'));
+            }
+        }
+        for (let i = 0; i < steps.length; i++){
+            if (steps[i].checked){
+                steps_for_request.push(steps[i].getAttribute('value'));
+            }
+        }
+        $.ajax({
+            url: '/update_manufacture',
+            type: 'POST',
+            data: {
+                producer_name: document.getElementById('producer_name').value,
+                description: document.getElementById('description').value,
+                region_id: document.getElementById('region_id').value,
+                steps: steps_for_request,
+                types: types_for_request
+            },
+            success: (data) => {
+                if (data === 200) {
+                    window.location.replace('/user_room');
+                } else {
+                    window.alert("You can't!");
+                }
+            }
+        });
+    }
+
+    function changePassword() {
+        $.ajax({
+            url: '/change_password',
+            type: 'POST',
+            data: {
+                new_password: document.getElementById('new_password').value,
+                old_password: document.getElementById('old_password').value,
+            },
+            success: (data) => {
+                if (data === 406) {
+                    window.location.replace('/user_room');
+                } else {
+                    if (data === 'Wrong old password!') {
+                        window.alert("Wrong old password!");
+                    } else {
+                        document.cookie = 'token=' + data.token;
+                        window.location.replace('/user_room');
+                    }
+                }
+            }
+        });
+    }
+
+    function openOrdersHistory() {
+      window.location.replace('/orders_history');
+    }
+</script>
+</html>

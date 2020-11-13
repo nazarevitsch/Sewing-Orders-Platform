@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<h2>Create Order</h2>
+<ul style="display: flex">
+    <li style="width: 20%"><a href="/index">Index</a></li>
+    <li style="width: 20%"><a href="/producers">Search Manufacturing</a></li>
+    <li style="width: 20%"><a href="/orders">Search Order</a></li>
+    <li style="width: 20%"><a href="/create_order">Create Order</a></li>
+    <li style="width: 20%"><a href="/user_room">User Room</a></li>
+</ul>
+<div>
+    <div id="filters">
+        <div style="display: flex">
+            <h4>Name: </h4>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <h4>Small Description: </h4>
+            <textarea id="small_description" style="width: 70%"></textarea>
+        </div>
+        <div>
+            <h4>Description: </h4>
+            <textarea id="description" style="width: 70%; height: 40%;"></textarea>
+        </div>
+        <div style="display: flex">
+                <h4>Region: </h4>
+                <div>
+                    <select id="region_id">
+                        <% for (var i = 0; i < regions.length; i++) { %>
+                        <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
+                        <% } %>
+                    </select>
+                </div>
+        </div>
+        <div>
+            <h4>Steps: </h4>
+            <div style="display: flex">
+                <% for (var i = 0; i < steps.length; i++) { %>
+                <p><%= steps[i].name %>:  <input type="checkbox" name="producer_steps" value="<%= steps[i].id %>"/></p>
+                <% } %>
+            </div>
+        </div>
+        <div>
+            <h4>Types: </h4>
+            <div style="display: flex">
+                <% for (var i = 0; i < types.length; i++) { %>
+                <p><%= types[i].name %>:  <input type="checkbox" name="producer_types" value="<%= types[i].id %>"/></p>
+                <% } %>
+            </div>
+        </div>
+        <button type="button" onclick="create_order()">Create Order</button>
+    </div>
+</div>
+
+</body>
+<script>
+    function create_order() {
+      let types = document.getElementsByName('producer_types');
+      let steps = document.getElementsByName('producer_steps');
+      let types_for_request = [];
+      let steps_for_request = [];
+      for (let i = 0; i < types.length; i++){
+        if (types[i].checked){
+          types_for_request.push(types[i].getAttribute('value'));
+        }
+      }
+      for (let i = 0; i < steps.length; i++){
+        if (steps[i].checked){
+          steps_for_request.push(steps[i].getAttribute('value'));
+        }
+      }
+      $.ajax({
+        url: '/create_order',
+        type: 'POST',
+        data: {
+          types: types_for_request,
+          steps: steps_for_request,
+          region_id: document.getElementById('region_id').value,
+          name: document.getElementById('name').value,
+          small_description: document.getElementById('small_description').value,
+          description: document.getElementById('description').value
+        },
+        success: (data) => {
+
+        }
+      });
+    }
+</script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>

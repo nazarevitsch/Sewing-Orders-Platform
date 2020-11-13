@@ -1,0 +1,10 @@
+<% for (var i = 0; i < orders.length; i++) { %>
+<div style="display: flex; border-style: solid">
+    <img src="" style="width: 70px; height: 70px">
+    <div>
+        <p>Title: <%= orders[i].name %></p>
+        <p>Region: <%= orders[i].region_name %></p>
+        <p>Description:<%= orders[i].small_description %></p>
+    </div>
+</div>
+<%}%>
