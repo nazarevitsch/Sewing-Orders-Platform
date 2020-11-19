@@ -15,6 +15,641 @@
   "paths": {
     "/": {
       "get":{
+        "summary": "Returns homepage",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      }
+    },
+    "/index": {
+      "get":{
+        "summary": "Returns homepage",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get":{
+        "summary": "Returns login page",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      },
+      "post": {
+        "operationId": "login",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login"
+          },
+          "400": {
+            "description": "Invalid username/password"
+          }
+        }
+      }
+    },
+    "/registration": {
+      "get":{
+        "summary": "Returns registration page",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      },
+      "post": {
+        "operationId": "registration",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful registration"
+          },
+          "400": {
+            "description": "Invalid username/password"
+          }
+        }
+      }
+    },
+    "/change_password": {
+      "post": {
+        "operationId": "changePassword",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "new_password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "old_password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful password changing"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/user_room": {
+      "get":{
+        "summary": "Returns user personal room",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          },
+          "401": {
+            "description": "login html page"
+          }
+        }
+      }
+    },
+    "/set_new_user_data": {
+      "post": {
+        "operationId": "setNewUserData",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "phone_number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful change"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/create_manufacture": {
+      "post": {
+        "operationId": "login",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "producer_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "description",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "region_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "in": "body",
+            "name": "steps",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful creation of manufacture"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/update_manufacture": {
+      "post": {
+        "operationId": "updateManufacture",
+        "summary": "Returns user cabinet page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "producer_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "description",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "region_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "in": "body",
+            "name": "steps",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful update of manufacture"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/producers": {
+      "get": {
+        "summary": "Returns page with producers",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      }
+    },
+    "/prodicer_page/{page}": {
+      "post": {
+        "operationId": "updateManufacture",
+        "summary": "return producers page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "page",
+            "description": "page number",
+            "required": true,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "body",
+            "name": "region_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "in": "body",
+            "name": "steps",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Html page with producers"
+          }
+        }
+      }
+    },
+    "/create_order": {
+      "get": {
+        "summary": "Returns page to create order",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          },
+          "401": {
+            "description": "Not authenticate"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createOrder",
+        "summary": "order will be created",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "small_description",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "description",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "region_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "in": "body",
+            "name": "steps",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful creation of order"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "Returns page with orders",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      }
+    },
+    "/order_page/{page}": {
+      "post": {
+        "operationId": "orderPage",
+        "summary": "return order page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "page",
+            "description": "page number",
+            "required": true,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "body",
+            "name": "region_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "in": "body",
+            "name": "steps",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Html page with orders"
+          }
+        }
+      }
+    },
+    "/orders_history": {
+      "get": {
+        "summary": "Returns page with orders history of user orders",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An history of orders html page"
+          },
+          "401":{
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/disable_order/{id}": {
+      "post": {
+        "operationId": "disableOrder",
+        "summary": "order will be deactivated",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "page number",
+            "required": true,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Html page with users orders"
+          },
+          "401":{
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/forgot_password": {
+      "get": {
+        "summary": "Returns page for restoration of password",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "An html page"
+          }
+        }
+      },
+      "post": {
+        "operationId": "forgotPassword",
+        "summary": "new password will be sent per email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "username",
+            "name": "types",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login page"
+          }
+        }
       }
     }
   }
