@@ -11,6 +11,7 @@ const producerStepsService = require('./service/ProducersStepsService.js');
 const producerTypesService = require('./service/ProducersTypesService.js');
 const orderService = require('./service/OrderService.js');
 const s3 = require('./workWithAWS/connectionAWS.js');
+const fs = require('fs');
 
 const router = new Router();
 
@@ -164,6 +165,7 @@ router
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       let image_link = await s3.uploadFile(ctx.request.files.image.path);
+      fs.unlinkSync(ctx.request.files.image.path);
       await orderService.createOrder(data, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
         ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
       ctx.response.status = 200;

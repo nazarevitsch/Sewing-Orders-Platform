@@ -90,8 +90,8 @@
         method: "POST",
         body: formData,
       }).then(data => {
-        // if (data.status === 200) location.replace('/user_room')
-        // else alert('Something is wrong!')
+        if (data.status === 200) location.replace('/user_room')
+        else alert('Something is wrong!')
       });
     }
 </script>
