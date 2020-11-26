@@ -58,19 +58,19 @@ const dropOrderByUserId = user_id => `delete from orders where user_id = ${user_
 const selectOrdersByStepsAndTypesAndRegion = (steps, types, region_id) => {
   let answer = '';
   if (Number(region_id) === 1) {
-    answer = `select t4.id as id, t4.name as name, region_id ,small_description, region_name from
+    answer = `select t4.id as id, t4.name as name, region_id ,small_description, t4.image_link as image_link, region_name from
   (select * from
-  (select distinct t2.id, t2.name, t2.region_id, t2.small_description, count(t2.id) over (partition by t2.id) as types_amount from
+  (select distinct t2.id, t2.name, t2.region_id, t2.small_description, t2.image_link, count(t2.id) over (partition by t2.id) as types_amount from
   (select * from
-  (select distinct o.id, name, region_id, o.small_description, count(o.id) over (partition by o.id) as steps_amount from
+  (select distinct o.id, name, region_id, o.small_description, image_link, count(o.id) over (partition by o.id) as steps_amount from
   (select * from orders where available = true) o
   join orders_manufacturing_steps oms on o.id = oms.order_id`;
   } else {
-    answer = `select t4.id as id, t4.name as name, region_id ,small_description, region_name from
+    answer = `select t4.id as id, t4.name as name, region_id ,small_description, t4.image_link as image_link, region_name from
   (select * from
-  (select distinct t2.id, t2.name, t2.region_id, t2.small_description, count(t2.id) over (partition by t2.id) as types_amount from
+  (select distinct t2.id, t2.name, t2.region_id, t2.small_description, t2.image_link, count(t2.id) over (partition by t2.id) as types_amount from
   (select * from
-  (select distinct o.id, name, region_id, o.small_description, count(o.id) over (partition by o.id) as steps_amount from
+  (select distinct o.id, name, region_id, o.small_description, image_link, count(o.id) over (partition by o.id) as steps_amount from
   (select * from orders where available = true and region_id = ${region_id}) o
   join orders_manufacturing_steps oms on o.id = oms.order_id`;
   }

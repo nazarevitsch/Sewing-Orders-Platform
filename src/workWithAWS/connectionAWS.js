@@ -20,7 +20,6 @@ async function uploadFile(fileLocation) {
     Body: file
   }).promise()
     .then(data => {
-      console.log(data);
       return data.Location;
     })
 }
