@@ -2,9 +2,9 @@
 
 const client = require('../Connection.js');
 
-async function createOrder(user_id, name, region_id, small_description, description, random_key) {
+async function createOrder(user_id, name, region_id, small_description, description, random_key, image_link) {
   return client
-    .query(insertOrder(user_id, name, region_id, small_description, description, random_key))
+    .query(insertOrder(user_id, name, region_id, small_description, description, random_key, image_link))
     .then(result => result)
     .catch(err => console.log(err));
 }
@@ -120,9 +120,9 @@ const selectOrderByAll = (user_id, name, region_id, small_description, descripti
 small_description = '${small_description}' and description = '${description}' and available = true 
 and random_key = '${random_key}'`;
 
-const insertOrder = (user_id, name, region_id, small_description, description, random_key) =>
-  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key) 
-VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${random_key}')`;
+const insertOrder = (user_id, name, region_id, small_description, description, random_key, image_link) =>
+  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key, image_link) 
+VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${random_key}', '${image_link}')`;
 
 module.exports = {
   createOrder,

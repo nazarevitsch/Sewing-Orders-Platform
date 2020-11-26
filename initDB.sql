@@ -60,7 +60,8 @@ create table orders(
     region_id int,
     available bool,
     description text,
-    date_creation date
+    date_creation date,
+    image_link varchar(255)
 );
 
 drop table if exists producers_sewing_types cascade;

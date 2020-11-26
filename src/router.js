@@ -10,30 +10,31 @@ const stepService = require('./service/StepService.js');
 const producerStepsService = require('./service/ProducersStepsService.js');
 const producerTypesService = require('./service/ProducersTypesService.js');
 const orderService = require('./service/OrderService.js');
+const s3 = require('./workWithAWS/connectionAWS.js');
 
 const router = new Router();
 
 router
-  .get('/', async ctx => { //
+  .get('/', async ctx => {
     await ctx.render('index');
   })
-  .get('/index', async ctx => { //
+  .get('/index', async ctx => {
     await ctx.render('index');
   })
-  .get('/login', async ctx => { //
+  .get('/login', async ctx => {
     await ctx.render('login');
   })
-  .post('/login', async ctx => { //
+  .post('/login', async ctx => {
     const userExist = await userService.findUserByEmailAndPassword(ctx.request.body.username, ctx.request.body.password);
     if (userExist) {
       const token = workWithToken.createToken(ctx.request.body);
       ctx.response.body = { token };
     } else ctx.response.body = 406;
   })
-  .get('/registration', async ctx => { //
+  .get('/registration', async ctx => {
     await ctx.render('registration');
   })
-  .post('/registration', async ctx => { //
+  .post('/registration', async ctx => {
     const emailUsed = await userService.isEmailAlreadyUsed(ctx.request.body.username);
     if (emailUsed) {
       ctx.response.body = 406;
@@ -45,7 +46,7 @@ router
       };
     }
   })
-  .post('/change_password', async ctx => { //
+  .post('/change_password', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       if (data.password === ctx.request.body.old_password) {
@@ -59,7 +60,7 @@ router
       ctx.response.body = 406;
     }
   })
-  .get('/user_room', async ctx => { //
+  .get('/user_room', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const user = await userService.getAllInformationAboutUser(data.username, data.password);
@@ -103,7 +104,7 @@ router
       await ctx.render('user_room', { validation: false });
     }
   })
-  .post('/set_new_user_data', async ctx => { //
+  .post('/set_new_user_data', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       await userService.updatePhoneAndNameOfUser(data.username, data.password, ctx.request.body.name, ctx.request.body.phone_number);
@@ -112,7 +113,7 @@ router
       ctx.redirect('/login');
     }
   })
-  .post('/create_manufacture', async ctx => { //
+  .post('/create_manufacture', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
@@ -126,7 +127,7 @@ router
       ctx.redirect('/login');
     }
   })
-  .post('/update_manufacture', async ctx => { //
+  .post('/update_manufacture', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
@@ -140,17 +141,17 @@ router
       ctx.redirect('/login');
     }
   })
-  .get('/producers', async ctx => { //
+  .get('/producers', async ctx => {
     const types = await typeService.getAllTypes();
     const steps = await stepService.getAllSteps();
     const regions = await regionService.getAllRegions();
     await ctx.render('producers', { types, steps, regions });
   })
-  .post('/producer_page/:page', async ctx => { //
+  .post('/producer_page/:page', async ctx => {
     const producers = await producerService.getProducersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
     await ctx.render('producers_render', { producers });
   })
-  .get('/create_order', async ctx => { //
+  .get('/create_order', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const types = await typeService.getAllTypes();
@@ -159,25 +160,26 @@ router
       await ctx.render('create_order', { types, steps, regions });
     } else ctx.redirect('/login');
   })
-  .post('/create_order', async ctx => { //
+  .post('/create_order', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
+      let image_link = await s3.uploadFile(ctx.request.files.image.path);
       await orderService.createOrder(data, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
-        ctx.request.body.description, ctx.request.body.types, ctx.request.body.steps);
-      ctx.response.body = 200;
+        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
+      ctx.response.status = 200;
     } else ctx.redirect('/login');
   })
-  .get('/orders', async ctx => { //
+  .get('/orders', async ctx => {
     const types = await typeService.getAllTypes();
     const steps = await stepService.getAllSteps();
     const regions = await regionService.getAllRegions();
     await ctx.render('orders', { types, steps, regions });
   })
-  .post('/order_page/:page', async ctx => { //
+  .post('/order_page/:page', async ctx => {
     const orders = await orderService.getOrdersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
     await ctx.render('order_render', { orders });
   })
-  .get('/orders_history', async ctx => { //
+  .get('/orders_history', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const user_id = await userService.getUserIdByEmailAndPassword(data.username, data.password);
@@ -194,10 +196,10 @@ router
       ctx.redirect('/orders_history');
     } else ctx.redirect('/login');
   })
-  .get('/forgot_password', async ctx => { //
+  .get('/forgot_password', async ctx => {
     await ctx.render('forgot_password');
   })
-  .post('/forgot_password', async ctx => { //
+  .post('/forgot_password', async ctx => {
     const user = await userService.getUserByEmail(ctx.request.body.username);
     if (user !== undefined) {
       await userService.forgotPassword(user.email);

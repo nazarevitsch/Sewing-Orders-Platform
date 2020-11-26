@@ -1,7 +1,7 @@
 'use strict';
 
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
+const body = require('koa-body');
 const { routes } = require('./src/router.js');
 const render = require('koa-ejs');
 
@@ -15,10 +15,11 @@ render(server, {
   cache: false,
 });
 
-server.use(bodyParser());
-server.use(routes);
+server.use(body({multipart: true, formidable:{ uploadDir: __dirname + '/upload_files', keepExtensions: true}}));
 
+server.use(routes);
 server.listen(port, () => {
   console.log(`Server started on port ${port}...`);
 });
+
 exports.app = server;

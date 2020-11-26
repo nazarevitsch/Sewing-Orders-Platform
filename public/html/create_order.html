@@ -54,10 +54,13 @@
                 <% } %>
             </div>
         </div>
+        <div>
+            <h4>Image: </h4>
+            <input type="file" id="file"/>
+        </div>
         <button type="button" onclick="create_order()">Create Order</button>
     </div>
 </div>
-
 </body>
 <script>
     function create_order() {
@@ -75,20 +78,20 @@
           steps_for_request.push(steps[i].getAttribute('value'));
         }
       }
-      $.ajax({
-        url: '/create_order',
-        type: 'POST',
-        data: {
-          types: types_for_request,
-          steps: steps_for_request,
-          region_id: document.getElementById('region_id').value,
-          name: document.getElementById('name').value,
-          small_description: document.getElementById('small_description').value,
-          description: document.getElementById('description').value
-        },
-        success: (data) => {
-
-        }
+      var formData = new FormData();
+      formData.append('image', document.getElementById("file").files[0]);
+      formData.append('name', document.getElementById('name').value);
+      formData.append('types', types_for_request);
+      formData.append('steps', steps_for_request);
+      formData.append('region_id', document.getElementById('region_id').value,);
+      formData.append('description', document.getElementById('description').value);
+      formData.append('small_description', document.getElementById('small_description').value);
+      fetch("/create_order", {
+        method: "POST",
+        body: formData,
+      }).then(data => {
+        // if (data.status === 200) location.replace('/user_room')
+        // else alert('Something is wrong!')
       });
     }
 </script>

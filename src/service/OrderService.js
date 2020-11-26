@@ -5,10 +5,10 @@ const UserService = require('./UserService.js');
 const OrdersStepsService = require('./OrdersStepsService.js');
 const OrdersTypesService =  require('./OrderTypesService.js');
 
-async function createOrder(user, name, region_id, small_description, description, types, steps) {
+async function createOrder(user, name, region_id, small_description, description, types, steps, image_link) {
   const user_id = await UserService.getUserIdByEmailAndPassword(user.username, user.password);
   const random_key = await makeKey();
-  await OrderRepository.createOrder(user_id, name, region_id, small_description, description, random_key);
+  await OrderRepository.createOrder(user_id, name, region_id, small_description, description, random_key, image_link);
   const order_id = (await getOrderByAll(user_id, name, region_id, small_description, description, random_key)).id;
   if (types.length > 0) await OrdersTypesService.createOrdersTypes(order_id, types);
   if (steps.length > 0) await OrdersStepsService.createOrdersSteps(order_id, steps);

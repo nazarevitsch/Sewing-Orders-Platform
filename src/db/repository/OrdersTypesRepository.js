@@ -13,7 +13,7 @@ const insertOrdersTypes = (order_id, types) => {
   let answer = 'insert into orders_sewing_types(order_id, sewing_type_id)';
   for (let i = 0; i < types.length; i++) {
     if (i === 0) {
-      answer += `VALUES (${order_id}, ${types[i]})`;
+      answer += ` VALUES (${order_id}, ${types[i]})`;
     } else answer += `, (${order_id}, ${types[i]})`;
   }
   return answer;
