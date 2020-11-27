@@ -18,7 +18,8 @@ create table producers(
     name varchar(30),
     region_id int,
     date_creation date,
-    description text
+    description text,
+    image_link varchar(255)
 );
 
 drop table if exists customers cascade;
