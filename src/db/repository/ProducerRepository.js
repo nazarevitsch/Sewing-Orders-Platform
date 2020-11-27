@@ -2,9 +2,9 @@
 
 const client = require('../Connection.js');
 
-async function createProducer(user_id, name, region_id, description) {
+async function createProducer(user_id, name, region_id, description, image_link) {
   return client
-    .query(insertIntoProducers(user_id, name, region_id, description))
+    .query(insertIntoProducers(user_id, name, region_id, description, image_link))
     .then(result => result)
     .catch(err => console.log(err));
 }
@@ -57,15 +57,15 @@ const selectProducersByStepsAndTypesAndRegion = (types, steps, region_id) => {
   let answer;
   if (Number(region_id) === 1) {
     answer = `select * from 
-   (select distinct id, name, region_id from
- (select t2.id,t2.name, t2.region_id, count(t2.id) over (partition by t2.id) as amount_types from
- (select distinct id, name, region_id from (select p.id, p.name, p.region_id, count(p.id) over (partition by p.id) as amount_steps from producers p
+   (select distinct id, name, region_id, image_link from
+ (select t2.id,t2.name, t2.region_id, t2.image_link, count(t2.id) over (partition by t2.id) as amount_types from
+ (select distinct id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from producers p
      join producers_manufacturing_steps pms on p.id = pms.producer_id`;
   } else {
     answer = `select * from 
-   (select distinct id, name, region_id from
- (select t2.id,t2.name, t2.region_id, count(t2.id) over (partition by t2.id) as amount_types from
- (select distinct id, name, region_id from (select p.id, p.name, p.region_id, count(p.id) over (partition by p.id) as amount_steps from 
+   (select distinct id, name, region_id, image_link from
+ (select t2.id,t2.name, t2.region_id, t2.image_link, count(t2.id) over (partition by t2.id) as amount_types from
+ (select distinct id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from 
  (select * from producers where region_id = ${region_id}) p
      join producers_manufacturing_steps pms on p.id = pms.producer_id`;
   }
@@ -111,9 +111,9 @@ const selectProducers = page => `select * from producers order by id offset ${pa
 
 const updateProd = (producer_id, region_id, name, description) => `update producers set name = '${name}', region_id = ${region_id}, description = '${description}' where id = ${producer_id}`;
 
-const insertIntoProducers = (user_id, name, region_id, description) =>
-  `insert into producers(user_id, name, region_id, date_creation, description) 
-    values (${user_id}, '${name}', ${region_id}, current_date, '${description}')`;
+const insertIntoProducers = (user_id, name, region_id, description, image_link) =>
+  `insert into producers(user_id, name, region_id, date_creation, description, image_link) 
+    values (${user_id}, '${name}', ${region_id}, current_date, '${description}', '${image_link}')`;
 
 const selectProducerByUserId = user_id => `select * from producers where user_id = ${user_id}`;
 

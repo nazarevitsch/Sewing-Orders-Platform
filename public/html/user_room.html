@@ -14,7 +14,6 @@
     <li style="width: 20%"><a href="/create_order">Create Order</a></li>
     <li style="width: 20%"><a href="/user_room">User Room</a></li>
 </ul>
-<% if (validation) {%>
 <h2>Hello, <%= username %>!</h2>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"> Change my personal data </button>
 <% if (producer_already_existed) {%>
@@ -94,6 +93,7 @@
                         <textarea id="description" name="description" rows="7" cols="48" placeholder="Enter description.">
                         </textarea>
                     </p>
+                    <input type="file" id="file"/>
                 </form>
             </div>
             <div class="modal-footer">
@@ -130,14 +130,6 @@
         </div>
     </div>
 </div>
-
-<%} else {%>
-<h3>You are not logined, please login or create account.</h3>
-<ul>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/registration">SignUp</a></li>
-</ul>
-<% } %>
 </body>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -169,38 +161,34 @@
     }
 
     function createManufacture() {
-        let types = document.getElementsByName('producer_types');
-        let steps = document.getElementsByName('producer_steps');
-        let types_for_request = [];
-        let steps_for_request = [];
-        for (let i = 0; i < types.length; i++){
-            if (types[i].checked){
-                types_for_request.push(types[i].getAttribute('value'));
-            }
+      let types = document.getElementsByName('producer_types');
+      let steps = document.getElementsByName('producer_steps');
+      let types_for_request = [];
+      let steps_for_request = [];
+      for (let i = 0; i < types.length; i++) {
+        if (types[i].checked) {
+          types_for_request.push(types[i].getAttribute('value'));
         }
-        for (let i = 0; i < steps.length; i++){
-            if (steps[i].checked){
-                steps_for_request.push(steps[i].getAttribute('value'));
-            }
+      }
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i].checked) {
+          steps_for_request.push(steps[i].getAttribute('value'));
         }
-        $.ajax({
-            url: '/create_manufacture',
-            type: 'POST',
-            data: {
-                producer_name: document.getElementById('producer_name').value,
-                description: document.getElementById('description').value,
-                region_id: document.getElementById('region_id').value,
-                steps: steps_for_request,
-                types: types_for_request
-            },
-            success: (data) => {
-                if (data === 200) {
-                    window.location.replace('/user_room');
-                } else {
-                    window.alert("You can't!");
-                }
-            }
-        });
+      }
+      var formData = new FormData();
+      formData.append('image', document.getElementById("file").files[0]);
+      formData.append('producer_name', document.getElementById('producer_name').value);
+      formData.append('types', types_for_request);
+      formData.append('steps', steps_for_request);
+      formData.append('region_id', document.getElementById('region_id').value,);
+      formData.append('description', document.getElementById('description').value);
+      fetch("/create_manufacture", {
+        method: "POST",
+        body: formData,
+      }).then(data => {
+        if (data.status === 200) location.replace('/user_room');
+        else window.alert("You can't!")
+      });
     }
 
     function updateManufacture() {

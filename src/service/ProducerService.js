@@ -5,9 +5,9 @@ const UserService = require('./UserService.js');
 const ProducerTypesService = require('./ProducersTypesService.js');
 const ProducerStepsService = require('./ProducersStepsService.js');
 
-async function createProducer(user, name, region_id, description, types, steps) {
+async function createProducer(user, name, region_id, description, types, steps, image_link) {
   const user_id = await UserService.getUserIdByEmailAndPassword(user.username, user.password);
-  await ProducerRepository.createProducer(user_id, name, region_id, description);
+  await ProducerRepository.createProducer(user_id, name, region_id, description, image_link);
   const producer_id = await getProducerIdByUserId(user_id);
   if (types.length > 0) await ProducerTypesService.addProducersTypes(types, producer_id);
   if (steps.length > 0) await ProducerStepsService.addProducersSteps(steps, producer_id);

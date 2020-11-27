@@ -93,7 +93,6 @@ router
         username: data.username,
         name: user.name,
         phone: user.phone,
-        validation: true,
         regions,
         steps,
         types,
@@ -102,7 +101,7 @@ router
         producer_name: producer === undefined ? '' : producer.name
       });
     } else {
-      await ctx.render('user_room', { validation: false });
+      ctx.redirect('/login');
     }
   })
   .post('/set_new_user_data', async ctx => {
@@ -118,8 +117,11 @@ router
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
+      let image_link = await s3.uploadFile(ctx.request.files.image.path);
+      fs.unlinkSync(ctx.request.files.image.path);
       if (producer_id === undefined) {
-        await producerService.createProducer(data, ctx.request.body.producer_name, ctx.request.body.region_id, ctx.request.body.description, ctx.request.body.types, ctx.request.body.steps);
+        await producerService.createProducer(data, ctx.request.body.producer_name, ctx.request.body.region_id, ctx.request.body.description,
+          ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
         ctx.response.body = 200;
       } else {
         ctx.response.body = 406;
