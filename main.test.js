@@ -6,7 +6,7 @@ const orderService = require('./src/service/OrderService.js');
 
 const testEmail = '22testfortest22@gmail.com';
 const testPassword =  'test2020test';
-// Tests with user
+
 
 
 test('User exist', async () => {
