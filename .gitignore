@@ -1,3 +1,6 @@
 node_modules
 .idea
 .env
+
+# stryker temp files
+.stryker-tmp
