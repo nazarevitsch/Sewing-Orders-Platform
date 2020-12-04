@@ -7,7 +7,6 @@ const orderService = require('./src/service/OrderService.js');
 const testEmail = '22testfortest22@gmail.com';
 const testPassword =  'test2020test';
 // Tests with user
-
 test('User exist', async() =>
 {
   await userService.createUser(testEmail, testPassword);
@@ -118,10 +117,10 @@ test('Rout: /login -GET', async () => {
   expect(response.status).toBe(200);
 });
 
-// test('Rout: /registration -GET', async () => {
-//   const response = await request(app).get('/registration');
-//   expect(response.status).toBe(200);
-// });
+test('Rout: /registration -GET', async () => {
+  const response = await request(app).get('/registration');
+  expect(response.status).toBe(200);
+});
 
 async function login() {
   await userService.createUser(testEmail, testPassword);
@@ -252,11 +251,11 @@ test('Rout: /producer_page -GET', async () => {
 //   await userService.deletePasswordByEmailAndPassword(testEmail, testPassword);
 // });
 
-test('Rout: /orders -GET', async () => {
-  const response = await request(app)
-      .get('/orders');
-  expect(response.status).toBe(200);
-});
+// test('Rout: /orders -GET', async () => {
+//   const response = await request(app)
+//       .get('/orders');
+//   expect(response.status).toBe(200);
+// });
 
 // test('Rout: /order_page -GET', async () => {
 //   const response = await request(app)
