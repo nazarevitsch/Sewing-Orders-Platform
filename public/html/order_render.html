@@ -1,10 +1,10 @@
 <% for (var i = 0; i < orders.length; i++) { %>
-<div style="display: flex; border-style: solid">
-    <img src="<%= orders[i].image_link %>" style="width: 70px; height: 70px">
-    <div>
-        <p>Title: <%= orders[i].name %></p>
-        <p>Region: <%= orders[i].region_name %></p>
-        <p>Description:<%= orders[i].small_description %></p>
+<div style="display: flex; border-bottom: dashed 2px #4F3B29; margin: 10px; padding: 10px">
+    <img src="<%= orders[i].image_link %>" style="border: dashed 1px #4F3B29; width: 100px; height: 100px; margin: 10px;" alt="Order image">
+    <div style="display: flex; justify-content: space-around; width: 80%">
+        <p>Title: <br/><%= orders[i].name %></p>
+        <p>Region: <br/><%= orders[i].region_name %></p>
+        <p>Description: <br/><%= orders[i].small_description %></p>
     </div>
 </div>
 <%}%>
