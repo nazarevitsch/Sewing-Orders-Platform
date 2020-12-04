@@ -36,8 +36,7 @@ router
     await ctx.render('registration');
   })
   .post('/registration', async ctx => {
-    const emailUsed = await userService.isEmailAlreadyUsed(ctx.request.body.username);
-    if (emailUsed) {
+    if ((await userService.isEmailAlreadyUsed(ctx.request.body.username))) {
       ctx.response.body = 406;
     } else {
       await userService.createUser(ctx.request.body.username, ctx.request.body.password);

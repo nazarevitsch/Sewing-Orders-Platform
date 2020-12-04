@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const userService = require('../service/UserService.js');
 
 function createToken(body) {
   const token = jwt.sign({
@@ -15,7 +16,9 @@ async function verifyToken(token) {
   await jwt.verify(token, process.env.SECRET_KEY, async (err, data) => {
     user = data;
   });
-  return user;
+  if (user !== undefined) {
+    return (await userService.findUserByEmailAndPassword(user.username, user.password)) ? user : undefined;
+  } else return undefined;
 }
 
 module.exports = {
