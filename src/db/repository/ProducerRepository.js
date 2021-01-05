@@ -51,21 +51,36 @@ async function deleteProducer(user_id) {
     .catch(err => console.log(err));
 }
 
+async function getProducerRegionNamePhoneNumberById(id) {
+  return client
+    .query(selectProducerRegionNamePhoneNumberById(id))
+    .then(result => result)
+    .catch(err => console.log(err));
+}
+
+const selectProducerRegionNamePhoneNumberById = (id) => `select j.id, j.user_id, j.name, j.region_name,
+j.description, j.image_link, u.phone, u.name as person_name from
+(select p.id, p.user_id, p.name, r.region_name as region_name,
+p.description, p.image_link from
+(select * from producers where id = ${id}) p 
+join regions r on r.id = p.region_id) j
+join users u on u.id = j.user_id`;
+
 const dropProducerByUserId = user_id => `delete from producers where user_id = ${user_id}`;
 
 const selectProducersByStepsAndTypesAndRegion = (types, steps, region_id) => {
   let answer;
   if (Number(region_id) === 1) {
-    answer = `select * from 
-   (select distinct id, name, region_id, image_link from
+    answer = `select t4.id, name, region_id, image_link, r.region_name from 
+   (select distinct t3.id, name, region_id, image_link from
  (select t2.id,t2.name, t2.region_id, t2.image_link, count(t2.id) over (partition by t2.id) as amount_types from
- (select distinct id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from producers p
+ (select distinct t.id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from producers p
      join producers_manufacturing_steps pms on p.id = pms.producer_id`;
   } else {
-    answer = `select * from 
-   (select distinct id, name, region_id, image_link from
+    answer = `select t4.id, name, region_id, image_link from 
+   (select distinct t3.id, name, region_id, image_link from
  (select t2.id,t2.name, t2.region_id, t2.image_link, count(t2.id) over (partition by t2.id) as amount_types from
- (select distinct id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from 
+ (select distinct t.id, name, image_link, region_id from (select p.id, p.name, p.region_id, p.image_link, count(p.id) over (partition by p.id) as amount_steps from 
  (select * from producers where region_id = ${region_id}) p
      join producers_manufacturing_steps pms on p.id = pms.producer_id`;
   }
@@ -124,5 +139,6 @@ module.exports = {
   getProducers,
   getProducersAmount,
   getProducersByStepsAndTypesAndRegion,
-  deleteProducer
+  deleteProducer,
+  getProducerRegionNamePhoneNumberById
 };

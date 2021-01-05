@@ -165,7 +165,7 @@
     </package>
     <package name="order_application_for_sewing.src.db">
       <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-      <file name="Connection.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\Connection.js">
+      <file name="Connection.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\Connection.ts">
         <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -178,7 +178,7 @@
     </package>
     <package name="order_application_for_sewing.src.db.repository">
       <metrics statements="212" coveredstatements="136" conditionals="24" coveredconditionals="14" methods="128" coveredmethods="69"/>
-      <file name="OrderRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrderRepository.js">
+      <file name="OrderRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrderRepository.ts">
         <metrics statements="53" coveredstatements="41" conditionals="10" coveredconditionals="7" methods="28" coveredmethods="18"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -438,7 +438,7 @@
     </package>
     <package name="order_application_for_sewing.src.service">
       <metrics statements="104" coveredstatements="91" conditionals="24" coveredconditionals="13" methods="38" coveredmethods="29"/>
-      <file name="OrderService.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\service\OrderService.js">
+      <file name="OrderService.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\service\OrderService.ts">
         <metrics statements="25" coveredstatements="24" conditionals="10" coveredconditionals="5" methods="8" coveredmethods="7"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>

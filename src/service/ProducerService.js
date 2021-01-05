@@ -5,6 +5,10 @@ const UserService = require('./UserService.js');
 const ProducerTypesService = require('./ProducersTypesService.js');
 const ProducerStepsService = require('./ProducersStepsService.js');
 
+async function getProducerRegionNamePhoneNumberById(id) {
+  return (await ProducerRepository.getProducerRegionNamePhoneNumberById(id)).rows[0];
+}
+
 async function createProducer(user, name, region_id, description, types, steps, image_link) {
   const user_id = await UserService.getUserIdByEmailAndPassword(user.username, user.password);
   await ProducerRepository.createProducer(user_id, name, region_id, description, image_link);
@@ -58,5 +62,6 @@ module.exports = {
   getProducers,
   getProducersAmount,
   getProducersByStepsAndTypesAndRegion,
-  deleteProducer
+  deleteProducer,
+  getProducerRegionNamePhoneNumberById
 };

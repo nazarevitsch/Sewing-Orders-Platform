@@ -208,6 +208,16 @@ router
       await userService.forgotPassword(user.email);
       ctx.response.body = 200;
     } else ctx.response.body = 406;
+  })
+  .get('/observe_order/:id', async ctx => {
+    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
+    const order = await orderService.getOrderRegionNameAndPhoneNumberByID(ctx.request.params.id);
+    await ctx.render('observe_order', {showNumber: data !== undefined, order: order});
+  })
+  .get('/observe_producer/:id', async ctx => {
+    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
+    const producer = await producerService.getProducerRegionNamePhoneNumberById(ctx.request.params.id);
+    await ctx.render('observe_producer', {showNumber: data !== undefined, producer: producer});
   });
 
 exports.routes = router.routes();

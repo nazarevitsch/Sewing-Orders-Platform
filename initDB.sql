@@ -22,23 +22,10 @@ create table producers(
     image_link varchar(255)
 );
 
-drop table if exists customers cascade;
-create table customers(
-    id serial primary key,
-    user_id int,
-    date_creation date
-);
-
 drop table if exists regions cascade;
 create table regions(
     id serial primary key,
     region_name varchar(30)
-);
-
-drop table if exists factory_size cascade;
-create table factory_size(
-    id serial primary key,
-    name varchar(30)
 );
 
 drop table if exists manufacturing_steps cascade;
@@ -56,10 +43,12 @@ create table sewing_types(
 drop table if exists orders cascade;
 create table orders(
     id serial primary key,
-    customer_id int,
+    user_id int,
     name varchar(100),
     region_id int,
     available bool,
+    random_key varchar(10),
+    small_description text,
     description text,
     date_creation date,
     image_link varchar(255)

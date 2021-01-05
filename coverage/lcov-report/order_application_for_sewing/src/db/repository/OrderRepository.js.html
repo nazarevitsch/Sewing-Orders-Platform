@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for order_application_for_sewing/src/db/repository/OrderRepository.js</title>
+    <title>Code coverage report for order_application_for_sewing/src/db/repository/OrderRepository.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">order_application_for_sewing/src/db/repository</a> OrderRepository.js</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">order_application_for_sewing/src/db/repository</a> OrderRepository.ts</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">77.97% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>46/59</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">70% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>7/10</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">64.29% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>18/28</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">77.36% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>41/53</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -329,7 +329,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
 &nbsp;
-const client = require('../Connection.js');
+const client = require('../Connection.ts');
 &nbsp;
 async function createOrder(user_id, name, region_id, small_description, description, random_key) {
   return client
@@ -441,16 +441,16 @@ join regions r on r.id = t4.region_id`;
 &nbsp;
 const disOrderByOrderId = <span class="fstat-no" title="function not covered" >(o</span>rder_id, user_id) =&gt; <span class="cstat-no" title="statement not covered" >`update orders set available = false where id = ${order_id} and user_id = ${user_id}`;</span>
 &nbsp;
-const selectOrderByUserIdAndAvailable = (user_id, available) =&gt; `select id, name, to_char(date_creation, 'DD Mon YYYY') as date from orders 
+const selectOrderByUserIdAndAvailable = (user_id, available) =&gt; `select id, name, to_char(date_creation, 'DD Mon YYYY') as date from orders
 where user_id = ${user_id} and available = ${available}`;
 &nbsp;
 const selectOrderByAll = (user_id, name, region_id, small_description, description, random_key) =&gt;
-  `select * from orders where user_id = ${user_id} and name = '${name}' and region_id = ${region_id} and 
-small_description = '${small_description}' and description = '${description}' and available = true 
+  `select * from orders where user_id = ${user_id} and name = '${name}' and region_id = ${region_id} and
+small_description = '${small_description}' and description = '${description}' and available = true
 and random_key = '${random_key}'`;
 &nbsp;
 const insertOrder = (user_id, name, region_id, small_description, description, random_key) =&gt;
-  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key) 
+  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key)
 VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${random_key}')`;
 &nbsp;
 module.exports = {
@@ -482,4 +482,3 @@ module.exports = {
         <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
-    

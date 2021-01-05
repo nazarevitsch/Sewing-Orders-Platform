@@ -5,6 +5,10 @@ const UserService = require('./UserService.js');
 const OrdersStepsService = require('./OrdersStepsService.js');
 const OrdersTypesService =  require('./OrderTypesService.js');
 
+async function getOrderRegionNameAndPhoneNumberByID(id){
+  return (await OrderRepository.selectOrderRegionNameAndPhoneNumberByID(id)).rows[0];
+}
+
 async function createOrder(user, name, region_id, small_description, description, types, steps, image_link) {
   const user_id = await UserService.getUserIdByEmailAndPassword(user.username, user.password);
   const random_key = await makeKey();
@@ -56,5 +60,6 @@ module.exports = {
   disableOrderByOrderIdAndUserId,
   getOrdersByStepsAndTypesAndRegion,
   deleteOrder,
-  findLastOrder
+  findLastOrder,
+  getOrderRegionNameAndPhoneNumberByID
 };

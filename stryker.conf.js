@@ -7,5 +7,5 @@ module.exports = {
   mutator: "javascript",
   testRunner: "jest",
   coverageAnalysis: "off",
-  mutate: ["src/service/UserService.js", "src/service/ProducerService.js","src/service/OrderService.js","/src/service/TypeService.js","index.js"]
+  mutate: ["src/service/UserService.js", "src/service/ProducerService.js","src/service/OrderService.ts","/src/service/TypeService.js"]
 };

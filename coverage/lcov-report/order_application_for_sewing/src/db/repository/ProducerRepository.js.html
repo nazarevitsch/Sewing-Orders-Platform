@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
         <h1><a href="../../../../index.html">All files</a> / <a href="index.html">order_application_for_sewing/src/db/repository</a> ProducerRepository.js</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">72.41% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>42/58</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">70% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>7/10</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">53.57% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>15/28</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">72.55% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>37/51</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -315,7 +315,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
 &nbsp;
-const client = require('../Connection.js');
+const client = require('../Connection.ts');
 &nbsp;
 async function createProducer(user_id, name, region_id, description) {
   return client
@@ -371,7 +371,7 @@ const dropProducerByUserId = user_id =&gt; `delete from producers where user_id 
 const selectProducersByStepsAndTypesAndRegion = (types, steps, region_id) =&gt; {
   let answer;
   <span class="missing-if-branch" title="else path not taken" >E</span>if (Number(region_id) === 1) {
-    answer = `select * from 
+    answer = `select * from
    (select distinct id, name, region_id from
  (select t2.id,t2.name, t2.region_id, count(t2.id) over (partition by t2.id) as amount_types from
  (select distinct id, name, region_id from (select p.id, p.name, p.region_id, count(p.id) over (partition by p.id) as amount_steps from producers p
@@ -380,7 +380,7 @@ const selectProducersByStepsAndTypesAndRegion = (types, steps, region_id) =&gt; 
 <span class="cstat-no" title="statement not covered" >    answer = `select * from </span>
    (select distinct id, name, region_id from
  (select t2.id,t2.name, t2.region_id, count(t2.id) over (partition by t2.id) as amount_types from
- (select distinct id, name, region_id from (select p.id, p.name, p.region_id, count(p.id) over (partition by p.id) as amount_steps from 
+ (select distinct id, name, region_id from (select p.id, p.name, p.region_id, count(p.id) over (partition by p.id) as amount_steps from
  (select * from producers where region_id = ${region_id}) p
      join producers_manufacturing_steps pms on p.id = pms.producer_id`;
   }
@@ -427,7 +427,7 @@ const selectProducers = <span class="fstat-no" title="function not covered" >pa<
 const updateProd = (producer_id, region_id, name, description) =&gt; `update producers set name = '${name}', region_id = ${region_id}, description = '${description}' where id = ${producer_id}`;
 &nbsp;
 const insertIntoProducers = (user_id, name, region_id, description) =&gt;
-  `insert into producers(user_id, name, region_id, date_creation, description) 
+  `insert into producers(user_id, name, region_id, date_creation, description)
     values (${user_id}, '${name}', ${region_id}, current_date, '${description}')`;
 &nbsp;
 const selectProducerByUserId = user_id =&gt; `select * from producers where user_id = ${user_id}`;
@@ -461,4 +461,3 @@ module.exports = {
         <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
-    

@@ -51,6 +51,20 @@ async function findLastOrder() {
     .catch(err => console.log(err));
 }
 
+async function selectOrderRegionNameAndPhoneNumberByID(id) {
+  return client
+    .query(orderRegionNameAndPhoneNumberByID(id))
+    .then(result => result)
+    .catch(err => console.log(err));
+}
+
+const orderRegionNameAndPhoneNumberByID = (id) => `select j.id, j.user_id, j.name, j.region_name as region_name, 
+j.description, j.image_link, u.name as person_name, u.phone from
+((select o.id, o.user_id, o.name, r.region_name as region_name, o.description, o.image_link from 
+(select * from orders where id = ${id}) o 
+join regions r on o.region_id = r.id)) j
+join users u on u.id = j.user_id`
+
 const selectLastOrder = () => 'select * from orders where id = (select max(id) as max from orders);';
 
 const dropOrderByUserId = user_id => `delete from orders where user_id = ${user_id}`;
@@ -131,5 +145,6 @@ module.exports = {
   disableOrderByOrderId,
   getOrdersByStepsAndTypesAndRegion,
   deleteOrder,
-  findLastOrder
+  findLastOrder,
+  selectOrderRegionNameAndPhoneNumberByID
 };
