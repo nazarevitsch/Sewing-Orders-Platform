@@ -134,4 +134,4 @@ var selectOrderByAll = function (user_id, name, region_id, small_description, de
 var insertOrder = function (user_id, name, region_id, small_description, description, random_key, image_link) {
     return "insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key, image_link) \nVALUES(" + user_id + ", '" + name + "', " + region_id + ", true, '" + small_description + "', '" + description + "', current_date, '" + random_key + "', '" + image_link + "')";
 };
-//# sourceMappingURL=OrderRepository.js.map
+//# sourceMappingURL=OrderRepository.ts.map

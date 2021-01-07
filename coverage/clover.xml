@@ -234,7 +234,7 @@
         <line num="124" count="2" type="stmt"/>
         <line num="127" count="1" type="stmt"/>
       </file>
-      <file name="OrdersStepsRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrdersStepsRepository.js">
+      <file name="OrdersStepsRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrdersStepsRepository.ts">
         <metrics statements="12" coveredstatements="3" conditionals="2" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
@@ -249,7 +249,7 @@
         <line num="19" count="0" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
       </file>
-      <file name="OrdersTypesRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrdersTypesRepository.js">
+      <file name="OrdersTypesRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\OrdersTypesRepository.ts">
         <metrics statements="12" coveredstatements="3" conditionals="2" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
@@ -264,7 +264,7 @@
         <line num="19" count="0" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
       </file>
-      <file name="ProducerRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducerRepository.js">
+      <file name="ProducerRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducerRepository.ts">
         <metrics statements="51" coveredstatements="37" conditionals="10" coveredconditionals="7" methods="28" coveredmethods="15"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -318,7 +318,7 @@
         <line num="118" count="6" type="stmt"/>
         <line num="120" count="1" type="stmt"/>
       </file>
-      <file name="ProducersStepsRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducersStepsRepository.js">
+      <file name="ProducersStepsRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducersStepsRepository.ts">
         <metrics statements="18" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="3"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
@@ -339,7 +339,7 @@
         <line num="36" count="0" type="stmt"/>
         <line num="39" count="1" type="stmt"/>
       </file>
-      <file name="ProducersTypesRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducersTypesRepository.js">
+      <file name="ProducersTypesRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\ProducersTypesRepository.ts">
         <metrics statements="18" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="3"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
@@ -360,7 +360,7 @@
         <line num="36" count="0" type="stmt"/>
         <line num="39" count="1" type="stmt"/>
       </file>
-      <file name="RegionRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\RegionRepository.js">
+      <file name="RegionRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\RegionRepository.ts">
         <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="5" type="stmt"/>
@@ -369,7 +369,7 @@
         <line num="12" count="5" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
       </file>
-      <file name="StepRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\StepRepository.js">
+      <file name="StepRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\StepRepository.ts">
         <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="5" type="stmt"/>
@@ -378,7 +378,7 @@
         <line num="12" count="5" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
       </file>
-      <file name="TypeRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\TypeRepository.js">
+      <file name="TypeRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\TypeRepository.ts">
         <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="5" type="stmt"/>
@@ -387,7 +387,7 @@
         <line num="12" count="5" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
       </file>
-      <file name="UserRepository.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\UserRepository.js">
+      <file name="UserRepository.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\db\repository\UserRepository.ts">
         <metrics statements="30" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="28" coveredmethods="21"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -472,7 +472,7 @@
         <line num="6" count="0" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
       </file>
-      <file name="OrdersStepsService.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\service\OrdersStepsService.js">
+      <file name="OrdersStepsService.ts" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\service\OrdersStepsService.ts">
         <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="0" type="stmt"/>

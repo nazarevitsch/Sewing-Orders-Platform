@@ -16,7 +16,7 @@
      <li style="width: 20%"><a href="/producers">Search Manufacturing</a></li>
      <li style="width: 20%"><a href="/orders">Search Order</a></li>
      <li style="width: 20%"><a href="/create_order">Create Order</a></li>
-     <li style="width: 20%; background: rgba(189,132,80, 0.6);"><a href="/user_room">User Room</a></li>
+     <li style="width: 20%;"><a href="/user_room">User Room</a></li>
     </ul>
 </div>
 <div id="room">
@@ -97,8 +97,7 @@
                         <% } %>
                     </div>
                     <label>Description:
-                        <textarea id="description" name="description" rows="7" cols="48" placeholder="Enter description.">
-                        </textarea>
+                        <textarea id="description" name="description" rows="7" cols="48" placeholder="Enter description."><%= description %></textarea>
                     </label>
                     <label>Additional media: <br/> <input style="border: none;" type="file" id="file"/></label>
                 </form>
@@ -221,13 +220,8 @@
     }
 </style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
-    function uploadCreationForm() {
-
-    }
 
     function deleteCookies(){
         document.cookie = 'token=nothing';
@@ -252,6 +246,62 @@
         });
     }
 
+    function isValidatedCreate(formData) {
+      let message = '';
+      let flag = true;
+      if(formData.get('image').size === undefined) {
+        message += "Оберіть файл\n"
+        flag = false;
+      }
+      if (formData.get('producer_name').length === 0){
+        message +="Введіть назву виробництва\n";
+        flag = false;
+      }
+      if (formData.get('types').length === 0){
+        message += "Оберіть хоча б один тип виробництва\n";
+        flag = false;
+      }
+      if (formData.get('steps').length === 0){
+        message += "Оберіть хоча б один крок виробництва\n";
+        flag = false;
+      }
+      if (formData.get('description').length === 0){
+        message +="Введіть опис виробництва\n";
+        flag = false;
+      }
+      if(!flag){
+        alert(message);
+        return flag
+      }
+      return flag
+    }
+
+    function isValidatedUpdate(formData) {
+      let message = '';
+      let flag = true;
+      if (formData.get('producer_name').length === 0){
+        message +="Введіть назву виробництва\n";
+        flag = false;
+      }
+      if (formData.get('types').length === 0){
+        message += "Оберіть хоча б один тип виробництва\n";
+        flag = false;
+      }
+      if (formData.get('steps').length === 0){
+        message += "Оберіть хоча б один крок виробництва\n";
+        flag = false;
+      }
+      if (formData.get('description').length === 0){
+        message +="Введіть опис виробництва\n";
+        flag = false;
+      }
+      if(!flag){
+        alert(message);
+        return flag
+      }
+      return flag
+    }
+
     function createManufacture() {
       let types = document.getElementsByName('producer_types');
       let steps = document.getElementsByName('producer_steps');
@@ -274,48 +324,47 @@
       formData.append('steps', steps_for_request);
       formData.append('region_id', document.getElementById('region_id').value,);
       formData.append('description', document.getElementById('description').value);
-      fetch("/create_manufacture", {
-        method: "POST",
-        body: formData,
-      }).then(data => {
-        if (data.status === 200) location.replace('/user_room');
-        else window.alert("You can't!")
-      });
+      if(isValidatedCreate(formData)) {
+        fetch('/create_manufacture', {
+          method: 'POST',
+          body: formData,
+        }).then(data => {
+          if (data.status === 200) location.replace('/user_room');
+          else window.alert('You can\'t!');
+        });
+      }
     }
 
     function updateManufacture() {
-        let types = document.getElementsByName('producer_types');
-        let steps = document.getElementsByName('producer_steps');
-        let types_for_request = [];
-        let steps_for_request = [];
-        for (let i = 0; i < types.length; i++){
-            if (types[i].checked){
-                types_for_request.push(types[i].getAttribute('value'));
-            }
+      let types = document.getElementsByName('producer_types');
+      let steps = document.getElementsByName('producer_steps');
+      let types_for_request = [];
+      let steps_for_request = [];
+      for (let i = 0; i < types.length; i++) {
+        if (types[i].checked) {
+          types_for_request.push(types[i].getAttribute('value'));
         }
-        for (let i = 0; i < steps.length; i++){
-            if (steps[i].checked){
-                steps_for_request.push(steps[i].getAttribute('value'));
-            }
+      }
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i].checked) {
+          steps_for_request.push(steps[i].getAttribute('value'));
         }
-        $.ajax({
-            url: '/update_manufacture',
-            type: 'POST',
-            data: {
-                producer_name: document.getElementById('producer_name').value,
-                description: document.getElementById('description').value,
-                region_id: document.getElementById('region_id').value,
-                steps: steps_for_request,
-                types: types_for_request
-            },
-            success: (data) => {
-                if (data === 200) {
-                    window.location.replace('/user_room');
-                } else {
-                    window.alert("You can't!");
-                }
-            }
+      }
+      var formData = new FormData();
+      formData.append('producer_name', document.getElementById('producer_name').value);
+      formData.append('types', types_for_request);
+      formData.append('steps', steps_for_request);
+      formData.append('region_id', document.getElementById('region_id').value,);
+      formData.append('description', document.getElementById('description').value);
+      if (isValidatedUpdate(formData)) {
+        fetch('/update_manufacture', {
+          method: 'POST',
+          body: formData,
+        }).then(data => {
+          if (data.status === 200) location.replace('/user_room');
+          else window.alert('You can\'t!');
         });
+      }
     }
 
     function changePassword() {

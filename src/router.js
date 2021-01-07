@@ -9,9 +9,10 @@ const typeService = require('./service/TypeService.js');
 const stepService = require('./service/StepService.js');
 const producerStepsService = require('./service/ProducersStepsService.js');
 const producerTypesService = require('./service/ProducersTypesService.js');
-const orderService = require('./service/OrderService.js');
+const orderService = require('./service/OrderService.ts');
 const s3 = require('./workWithAWS/connectionAWS.js');
 const fs = require('fs');
+const db = require('./db/Connection');
 
 const router = new Router();
 
@@ -73,7 +74,7 @@ router
         const producer_steps = await producerStepsService.getStepsByProducerId(producer.id);
         for (let i = 0; i < steps.length; i++) {
           for (let l = 0; l < producer_steps.length; l++) {
-            if (steps[i].id === producer_steps[l].manufacturing_step_id) {
+            if (steps[i].id === producer_steps[l]) {
               steps[i].check = true;
               break;
             }
@@ -81,7 +82,7 @@ router
         }
         for (let i = 0; i < types.length; i++) {
           for (let l = 0; l < producer_types.length; l++) {
-            if (types[i].id === producer_types[l].sewing_type_id) {
+            if (types[i].id === producer_types[l]) {
               types[i].check = true;
               break;
             }
@@ -95,6 +96,7 @@ router
         regions,
         steps,
         types,
+        description: producer === undefined ? undefined : producer.description,
         producer_already_existed: (producer !== undefined),
         region_id: producer === undefined ? -1 : producer.region_id,
         producer_name: producer === undefined ? '' : producer.name
@@ -116,7 +118,7 @@ router
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
-      let image_link = await s3.uploadFile(ctx.request.files.image.path);
+      const image_link = await s3.uploadFile(ctx.request.files.image.path);
       fs.unlinkSync(ctx.request.files.image.path);
       if (producer_id === undefined) {
         await producerService.createProducer(data, ctx.request.body.producer_name, ctx.request.body.region_id, ctx.request.body.description,
@@ -165,9 +167,9 @@ router
   .post('/create_order', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
-      let image_link = await s3.uploadFile(ctx.request.files.image.path);
+      const image_link = await s3.uploadFile(ctx.request.files.image.path);
       fs.unlinkSync(ctx.request.files.image.path);
-      await orderService.createOrder(data, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
+      await orderService.orderService(db.createConnection()).createOrder(data, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
         ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
       ctx.response.status = 200;
     } else ctx.redirect('/login');
@@ -179,15 +181,15 @@ router
     await ctx.render('orders', { types, steps, regions });
   })
   .post('/order_page/:page', async ctx => {
-    const orders = await orderService.getOrdersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
+    const orders = await orderService.orderService(db.createConnection()).getOrdersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
     await ctx.render('order_render', { orders });
   })
   .get('/orders_history', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const user_id = await userService.getUserIdByEmailAndPassword(data.username, data.password);
-      const available_orders = await orderService.getOrderByUserIdAndAvailable(user_id, true);
-      const unavailable_orders = await orderService.getOrderByUserIdAndAvailable(user_id, false);
+      const available_orders = await orderService.orderService(db.createConnection()).getOrderByUserIdAndAvailable(user_id, true);
+      const unavailable_orders = await orderService.orderService(db.createConnection()).getOrderByUserIdAndAvailable(user_id, false);
       await ctx.render('orders_history', { available_orders, unavailable_orders });
     } else ctx.redirect('/login');
   })
@@ -195,7 +197,7 @@ router
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
       const user_id = await userService.getUserIdByEmailAndPassword(data.username, data.password);
-      await orderService.disableOrderByOrderIdAndUserId(ctx.request.params.id, user_id);
+      await orderService.orderService(db.createConnection()).disableOrderByOrderIdAndUserId(ctx.request.params.id, user_id);
       ctx.redirect('/orders_history');
     } else ctx.redirect('/login');
   })
@@ -211,13 +213,13 @@ router
   })
   .get('/observe_order/:id', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    const order = await orderService.getOrderRegionNameAndPhoneNumberByID(ctx.request.params.id);
-    await ctx.render('observe_order', {showNumber: data !== undefined, order: order});
+    const order = await orderService.orderService(db.createConnection()).getOrderRegionNameAndPhoneNumberByID(ctx.request.params.id);
+    await ctx.render('observe_order', { showNumber: data !== undefined, order });
   })
   .get('/observe_producer/:id', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     const producer = await producerService.getProducerRegionNamePhoneNumberById(ctx.request.params.id);
-    await ctx.render('observe_producer', {showNumber: data !== undefined, producer: producer});
+    await ctx.render('observe_producer', { showNumber: data !== undefined, producer });
   });
 
 exports.routes = router.routes();

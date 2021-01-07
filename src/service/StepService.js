@@ -3,8 +3,7 @@
 const StepRepository = require('../db/repository/StepRepository');
 
 async function getAllSteps() {
-  const answer = await StepRepository.getAllSteps();
-  return answer.rows;
+  return await StepRepository.stepRepository().getAllSteps();
 }
 
 module.exports = {

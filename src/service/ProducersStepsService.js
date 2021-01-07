@@ -1,18 +1,17 @@
 'use strict';
 
-const ProducerStepsRepository = require('../db/repository/ProducersStepsRepository.js');
+const ProducerStepsRepository = require('../db/repository/ProducersStepsRepository.ts');
 
 async function addProducersSteps(stepsList, producer_id) {
-  await ProducerStepsRepository.addProducersSteps(stepsList, producer_id);
+  await ProducerStepsRepository.producersStepsRepository().addProducersSteps(stepsList, producer_id);
 }
 
 async function getStepsByProducerId(producer_id) {
-  const answer = await ProducerStepsRepository.getStepsByProducerId(producer_id);
-  return answer.rows;
+  return await ProducerStepsRepository.producersStepsRepository().getStepsByProducerId(producer_id);
 }
 
 async function deleteStepsByProducerId(producer_id) {
-  await ProducerStepsRepository.deleteStepsByProducerId(producer_id);
+  await ProducerStepsRepository.producersStepsRepository().deleteStepsByProducerId(producer_id);
 }
 
 module.exports = {

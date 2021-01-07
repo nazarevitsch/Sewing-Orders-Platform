@@ -1,10 +1,9 @@
 'use strict';
 
-const RegionRepository = require('../db/repository/RegionRepository.js');
+const RegionRepository = require('../db/repository/RegionRepository.ts');
 
 async function getAllRegions() {
-  const answer = await RegionRepository.selectAllRegions();
-  return answer.rows;
+  return await RegionRepository.regionRepository().selectAllRegions();
 }
 
 module.exports = {

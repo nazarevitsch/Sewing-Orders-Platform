@@ -1,5 +1,5 @@
 <% for (var i = 0; i < orders.length; i++) { %>
-<div style="display: flex; border-bottom: dashed 2px #4F3B29; margin: 10px; padding: 10px"
+<div style="display: flex; border-bottom: dashed 2px #4F3B29; margin: 10px; padding: 10px; cursor: pointer"
 onclick="openOrder(<%= orders[i].id %>)">
     <img src="<%= orders[i].image_link %>" style="border: dashed 1px #4F3B29; width: 100px; height: 100px; margin: 10px;" alt="Order image">
     <div style="display: flex; justify-content: space-around; width: 80%">

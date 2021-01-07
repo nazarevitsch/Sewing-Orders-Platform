@@ -409,7 +409,7 @@ BRF:10
 BRH:7
 end_of_record
 TN:
-SF:src\db\repository\OrdersStepsRepository.js
+SF:src\db\repository\OrdersStepsRepository.ts
 FN:5,createOrdersSteps
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -440,7 +440,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\OrdersTypesRepository.js
+SF:src\db\repository\OrdersTypesRepository.ts
 FN:5,createOrdersTypes
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -471,7 +471,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\ProducerRepository.js
+SF:src\db\repository\ProducerRepository.ts
 FN:5,createProducer
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -597,7 +597,7 @@ BRF:10
 BRH:7
 end_of_record
 TN:
-SF:src\db\repository\ProducersStepsRepository.js
+SF:src\db\repository\ProducersStepsRepository.ts
 FN:5,addProducersSteps
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -648,7 +648,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\ProducersTypesRepository.js
+SF:src\db\repository\ProducersTypesRepository.ts
 FN:5,addProducersTypes
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -699,7 +699,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\RegionRepository.js
+SF:src\db\repository\RegionRepository.ts
 FN:5,selectAllRegions
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -722,7 +722,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\StepRepository.js
+SF:src\db\repository\StepRepository.ts
 FN:5,getAllSteps
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -745,7 +745,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\TypeRepository.js
+SF:src\db\repository\TypeRepository.ts
 FN:5,getAllTypes
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -768,7 +768,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\db\repository\UserRepository.js
+SF:src\db\repository\UserRepository.ts
 FN:5,emailIsAlreadyUsed
 FN:8,(anonymous_1)
 FN:9,(anonymous_2)
@@ -961,7 +961,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\service\OrdersStepsService.js
+SF:src\service\OrdersStepsService.ts
 FN:5,createOrdersSteps
 FNF:1
 FNH:0

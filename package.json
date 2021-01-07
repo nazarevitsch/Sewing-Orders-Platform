@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/pg": "^7.14.7",
     "aws-sdk": "^2.797.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",

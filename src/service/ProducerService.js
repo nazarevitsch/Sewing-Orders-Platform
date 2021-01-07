@@ -1,24 +1,19 @@
 'use strict';
 
-const ProducerRepository = require('../db/repository/ProducerRepository.js');
+const ProducerRepository = require('../db/repository/ProducerRepository.ts');
 const UserService = require('./UserService.js');
 const ProducerTypesService = require('./ProducersTypesService.js');
 const ProducerStepsService = require('./ProducersStepsService.js');
 
-async function getProducerRegionNamePhoneNumberById(id) {
-  return (await ProducerRepository.getProducerRegionNamePhoneNumberById(id)).rows[0];
-}
-
 async function createProducer(user, name, region_id, description, types, steps, image_link) {
   const user_id = await UserService.getUserIdByEmailAndPassword(user.username, user.password);
-  await ProducerRepository.createProducer(user_id, name, region_id, description, image_link);
-  const producer_id = await getProducerIdByUserId(user_id);
-  if (types.length > 0) await ProducerTypesService.addProducersTypes(types, producer_id);
-  if (steps.length > 0) await ProducerStepsService.addProducersSteps(steps, producer_id);
+  const producer = await ProducerRepository.producerRepository().createProducer(user_id, name, region_id, description, image_link);
+  if (types.length > 0) await ProducerTypesService.addProducersTypes(types, producer.id);
+  if (steps.length > 0) await ProducerStepsService.addProducersSteps(steps, producer.id);
 }
 
 async function updateProducer(producer_id, name, region_id, description, types, steps) {
-  await ProducerRepository.updateProducer(producer_id, region_id, name, description);
+  await ProducerRepository.producerRepository().updateProducer(producer_id, region_id, name, description);
   await ProducerStepsService.deleteStepsByProducerId(producer_id);
   await ProducerTypesService.deleteTypesByProducerId(producer_id);
   if (types.length > 0) await ProducerTypesService.addProducersTypes(types, producer_id);
@@ -26,42 +21,50 @@ async function updateProducer(producer_id, name, region_id, description, types, 
 }
 
 async function getProducerByUserId(userId) {
-  const answer = await ProducerRepository.getProducerByUserId(userId);
-  return answer.rows.length === 0 ? undefined : answer.rows[0];
+  return  await ProducerRepository.producerRepository().getProducerByUserId(userId);
 }
 
 async function getProducerIdByUserId(userId) {
-  const answer = await ProducerRepository.getProducerByUserId(userId);
-  return answer.rows.length === 0 ? undefined : answer.rows[0].id;
+  const answer = await ProducerRepository.producerRepository().getProducerByUserId(userId);
+  if (answer === undefined) return undefined;
+  return answer.id;
 }
 
 async function getProducers(page) {
-  const answer = await ProducerRepository.getProducers(page);
-  return answer.rows;
-}
-
-async function getProducersAmount() {
-  const answer = await ProducerRepository.getProducersAmount();
+  const answer = await ProducerRepository.producerRepository().getProducers(page);
+  console.log(answer);
   return answer;
 }
 
+async function getProducersAmount() {
+  return  await ProducerRepository.producerRepository().getProducersAmount();
+}
+
 async function getProducersByStepsAndTypesAndRegion(types, steps, region_id) {
-  const answer = await ProducerRepository.getProducersByStepsAndTypesAndRegion(types, steps, region_id);
-  return answer.rows;
+  return await ProducerRepository.producerRepository().getProducersByStepsAndTypesAndRegion(types, steps, region_id);
 }
 
 async function deleteProducer(email, password) {
-  await ProducerRepository.deleteProducer((await UserService.getUserIdByEmailAndPassword(email, password)));
+  await ProducerRepository.producerRepository().deleteProducer((await UserService.getUserIdByEmailAndPassword(email, password)));
+}
+
+async function getProducerById(id) {
+  return await ProducerRepository.producerRepository().getProducerById(id);
+}
+
+async function getProducerRegionNamePhoneNumberById(id) {
+  return (await ProducerRepository.producerRepository().getProducerRegionNamePhoneNumberById(id)).rows[0];
 }
 
 module.exports = {
   createProducer,
   getProducerByUserId,
+  getProducerById,
   getProducerIdByUserId,
   updateProducer,
   getProducers,
   getProducersAmount,
   getProducersByStepsAndTypesAndRegion,
-  deleteProducer,
-  getProducerRegionNamePhoneNumberById
+  getProducerRegionNamePhoneNumberById,
+  deleteProducer
 };
