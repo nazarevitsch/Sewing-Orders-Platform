@@ -2,11 +2,26 @@
 
 const client = require('../Connection.js');
 
-async function emailIsAlreadyUsed(email) {
-  return client
+async function getUserByEmailAndPassword(email, password) {
+  const user = await client
+    .query(selectUserByEmailAndPassword(email, password))
+    .then(result => result)
+    .catch(err => console.log(err));
+  return user.rows[0];
+}
+
+async function isUserExist(email, password){
+  const user = await getUserByEmailAndPassword(email, password);
+  if (user === undefined) return false;
+  return user.email === email && user.password === password;
+}
+
+async function isEmailAlreadyUsed(email) {
+  const user = await client
     .query(searchEmail(email))
     .then(result => result)
     .catch(err => console.log(err));
+  return user.rowCount === 1;
 }
 
 async function createUser(email, password) {
@@ -15,6 +30,8 @@ async function createUser(email, password) {
     .then(result => result)
     .catch(err => console.log(err));
 }
+
+//old functions
 
 async function searchUserByEmailAndPassword(email, password) {
   return client
@@ -67,10 +84,15 @@ const insertUser = (email, password) => `insert into users(email, password, date
 
 module.exports = {
   updatePhoneAndNameOfUser,
-  emailIsAlreadyUsed,
+  isEmailAlreadyUsed,
   updatePasswordByEmail,
   searchUserByEmailAndPassword,
   createUser,
   getUserByEmail,
-  deleteUserByEmailAndPassword
+  deleteUserByEmailAndPassword,
+
+
+
+  getUserByEmailAndPassword,
+  isUserExist
 };

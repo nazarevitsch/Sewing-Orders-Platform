@@ -1,12 +1,31 @@
 'use strict';
+
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const userService = require('../service/UserService.js');
+const userService = require('../service/UserService');
 
-function createToken(body) {
+async function login(email, password){
+  if ((await userService.isUserExist(email, password))){
+    return createToken(email, password);
+  }
+  return undefined;
+}
+
+async function registration(email, password) {
+  if (await userService.isEmailAlreadyUsed(email)) {
+    return {token: undefined, status: 406, message: 'Email is already used.'};
+  } else if (checkEmail(email) && checkPassword(password)) {
+    await userService.createUser(email, password);
+    return {token: createToken(email, password), status: 200, message: 'Everything is ok.'}
+  } else {
+    return {token: undefined, status: 406, message: 'Email or Password is wrong!.'}
+  }
+}
+
+function createToken(username, password) {
   const token = jwt.sign({
-    username: body.username,
-    password: body.password
+    username: username,
+    password: password
   }, process.env.SECRET_KEY);
   return token;
 }
@@ -21,7 +40,20 @@ async function verifyToken(token) {
   } else return undefined;
 }
 
+function checkEmail(email){
+  let patternForEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  return email.match(patternForEmail);
+}
+
+function checkPassword(password) {
+  let pattern = /^\w+$/;
+  return pattern.test(password);
+}
+
 module.exports = {
   createToken,
-  verifyToken
+  verifyToken,
+
+  login,
+  registration
 };

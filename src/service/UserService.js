@@ -3,13 +3,21 @@
 const UserRepository = require('../db/repository/UserRepository.js');
 const MailSender = require('../email/MailSender.js');
 
+//return token or error
+async function isUserExist(email, password){
+  return await UserRepository.isUserExist(email, password);
+}
+
 async function isEmailAlreadyUsed(email) {
-  return (await UserRepository.emailIsAlreadyUsed(email)).rowCount === 1;
+  return await UserRepository.isEmailAlreadyUsed(email);
 }
 
 async function createUser(email, password) {
   await UserRepository.createUser(email, password);
 }
+
+
+// old function
 
 async function findUserByEmailAndPassword(email, password) {
   return (await UserRepository.searchUserByEmailAndPassword(email, password)).rowCount === 1;
@@ -67,5 +75,7 @@ module.exports = {
   getUserIdByEmailAndPassword,
   getUserByEmail,
   forgotPassword,
-  deletePasswordByEmailAndPassword
+  deletePasswordByEmailAndPassword,
+
+  isUserExist
 };

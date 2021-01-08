@@ -1,8 +1,8 @@
 'use strict';
+
 require('dotenv').config();
 const Router = require('koa-router');
 const workWithToken = require('./auth/WorkWithToken.js');
-const userService = require('./service/UserService.js');
 const regionService = require('./service/RegionService.js');
 const producerService = require('./service/ProducerService.js');
 const typeService = require('./service/TypeService.js');
@@ -12,6 +12,8 @@ const producerTypesService = require('./service/ProducersTypesService.js');
 const orderService = require('./service/OrderService.js');
 const s3 = require('./workWithAWS/connectionAWS.js');
 const fs = require('fs');
+const userService = require('./service/UserService.js');
+
 
 const router = new Router();
 
@@ -26,25 +28,17 @@ router
     await ctx.render('login');
   })
   .post('/login', async ctx => {
-    const userExist = await userService.findUserByEmailAndPassword(ctx.request.body.username, ctx.request.body.password);
-    if (userExist) {
-      const token = workWithToken.createToken(ctx.request.body);
-      ctx.response.body = { token };
-    } else ctx.response.body = 406;
+    const token = await workWithToken.login(ctx.request.body.username, ctx.request.body.password);
+    ctx.response.status = token !== undefined ? 200 : 406;
+    ctx.response.body = { token: token };
   })
   .get('/registration', async ctx => {
     await ctx.render('registration');
   })
   .post('/registration', async ctx => {
-    if ((await userService.isEmailAlreadyUsed(ctx.request.body.username))) {
-      ctx.response.body = 406;
-    } else {
-      await userService.createUser(ctx.request.body.username, ctx.request.body.password);
-      const token = workWithToken.createToken(ctx.request.body);
-      ctx.response.body = {
-        token
-      };
-    }
+    const answer = await workWithToken.registration(ctx.request.body.username, ctx.request.body.password);
+    ctx.response.status = answer.status;
+    ctx.response.body = { token: answer.token, message: answer.message};
   })
   .post('/change_password', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
