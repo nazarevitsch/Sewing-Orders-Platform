@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.js",
+    "start": "node --max_old_space_size=8192 -r ts-node/register index.js",
     "web": "npm start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
