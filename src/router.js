@@ -39,6 +39,8 @@ router
   .post('/registration', async ctx => {
     if ((await userService.isEmailAlreadyUsed(ctx.request.body.username))) {
       ctx.response.body = 406;
+    } else if (!ctx.request.body.username.includes('@') && ctx.request.body.username.includes(' ') && ctx.request.body.password.length < 8) {
+      ctx.response.body = 403;
     } else {
       await userService.createUser(ctx.request.body.username, ctx.request.body.password);
       const token = workWithToken.createToken(ctx.request.body);

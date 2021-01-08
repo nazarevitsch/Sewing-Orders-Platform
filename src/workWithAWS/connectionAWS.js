@@ -12,16 +12,14 @@ const s3 = new AWS.S3({
 
 
 async function uploadFile(fileLocation) {
-  let file = fs.readFileSync(fileLocation);
+  const file = fs.readFileSync(fileLocation);
   return s3.upload({
     Bucket: bucketName,
     ACL: 'public-read',
     Key: new Date().toISOString(),
     Body: file
   }).promise()
-    .then(data => {
-      return data.Location;
-    })
+    .then(data => data.Location);
 }
 
 module.exports = {

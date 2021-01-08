@@ -66,8 +66,8 @@
     </ul>
 </div>
 <form id="registration-form">
-    <label> Username: <input type="text" name="username" id="username"/></label>
-    <label> Password: <input type="text" name="password" id="password"/></label>
+    <label> Email: <input type="text" name="username" id="username"/></label>
+    <label> Password: <input type="password" name="password" id="password"/></label>
     <button type="button" onclick="registration()">Registration</button>
     <p>Or you have already an account? Then <a href="/login">Login</a></p>
 </form>
@@ -118,23 +118,34 @@
     }
 </style>
 <script>
+
     function registration() {
+      if (document.getElementById('username').value.includes("@") &&
+        !document.getElementById('username').value.includes(" ") &&
+        document.getElementById('password').value.length > 8) {
         $.ajax({
-            url: '/registration',
-            type: 'POST',
-            data: {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
-            },
-            success: (data) => {
-                if (data !== 406) {
-                    document.cookie = 'token=' + data.token;
-                    window.location.replace('/user_room')
-                } else {
-                    window.alert("Email is already used!");
-                }
+          url: '/registration',
+          type: 'POST',
+          data: {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+          },
+          success: (data) => {
+            if (data === 406) {
+              window.alert("Email is already used!");
+            } else {
+              if (data === 403) {
+                alert("Password to small(min 8 char) or username contains invalid chars.")
+              } else {
+                document.cookie = 'token=' + data.token;
+                window.location.replace('/user_room')
+              }
             }
+          }
         });
+      } else {
+        alert("Password to small(min 8 char) or username contains invalid chars.")
+      }
     }
 </script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
