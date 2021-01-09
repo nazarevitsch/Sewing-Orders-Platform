@@ -9,11 +9,12 @@ const server = new Koa();
 const port = process.env.PORT || 8080;
 
 render(server, {
-  root: './public/html',
+  root: './public',
   layout: false,
   viewExt: 'html',
   cache: false,
 });
+
 
 server.use(body({multipart: true, formidable:{ uploadDir: __dirname + '/upload_files', keepExtensions: true}}));
 
