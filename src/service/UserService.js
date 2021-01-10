@@ -3,7 +3,6 @@
 const UserRepository = require('../db/repository/UserRepository.js');
 const MailSender = require('../email/MailSender.js');
 
-//return token or error
 async function isUserExist(email, password){
   return await UserRepository.isUserExist(email, password);
 }
@@ -16,6 +15,26 @@ async function createUser(email, password) {
   await UserRepository.createUser(email, password);
 }
 
+async function updatePasswordByEmail(email, newPassword) {
+  await UserRepository.updatePasswordByEmail(email, newPassword);
+}
+
+async function updatePhoneAndNameOfUser(email, password, name, phone) {
+  if (checkPhone(phone)) {
+    await UserRepository.updatePhoneAndNameOfUser(email, password, name, phone);
+    return {status: 200, message: 'Ok.'}
+  } else return {status: 406, message: 'Wrong phone.'};
+}
+
+async function getUserByEmail(email) {
+  return await UserRepository.getUserByEmail(email);
+}
+
+function checkPhone(phone){
+  let patternForPhoneNumber = /(^\+?\d{12}$)|(^\d{10}$)/;
+  console.log(patternForPhoneNumber.test(phone));
+  return patternForPhoneNumber.test(phone);
+}
 
 // old function
 
@@ -23,17 +42,9 @@ async function findUserByEmailAndPassword(email, password) {
   return (await UserRepository.searchUserByEmailAndPassword(email, password)).rowCount === 1;
 }
 
-async function updatePasswordByEmail(email, newPassword) {
-  await UserRepository.updatePasswordByEmail(email, newPassword);
-}
-
 async function getAllInformationAboutUser(email, password) {
   const answer = await UserRepository.searchUserByEmailAndPassword(email, password);
   return answer.rows[0];
-}
-
-async function updatePhoneAndNameOfUser(email, password, name, phone) {
-  await UserRepository.updatePhoneAndNameOfUser(email, password, name, phone);
 }
 
 async function getUserIdByEmailAndPassword(email, password) {
@@ -41,10 +52,6 @@ async function getUserIdByEmailAndPassword(email, password) {
   return answer.rows[0].id;
 }
 
-async function getUserByEmail(email) {
-  const answer = await UserRepository.getUserByEmail(email);
-  return answer.rows.length > 0 ? answer.rows[0] : undefined;
-}
 
 async function forgotPassword(email) {
   const newPassword = await makeKey();

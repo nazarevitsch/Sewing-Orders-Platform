@@ -151,7 +151,7 @@
     </package>
     <package name="order_application_for_sewing.src.auth">
       <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
-      <file name="WorkWithToken.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\auth\WorkWithToken.js">
+      <file name="Authorization.js" path="C:\Users\nazar\OneDrive\Документы\JS Projects\order_application_for_sewing\src\auth\Authorization.js">
         <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>

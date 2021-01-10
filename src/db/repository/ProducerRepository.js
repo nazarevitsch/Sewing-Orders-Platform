@@ -2,48 +2,38 @@
 
 const client = require('../Connection.js');
 
-async function createProducer(user_id, name, region_id, description, image_link) {
-  return client
+async function createProducerAndReturnId(user_id, name, region_id, description, image_link) {
+  let producerId = await client
     .query(insertIntoProducers(user_id, name, region_id, description, image_link))
+    .then(result => result)
+    .catch(err => console.log(err));
+  return producerId.rows[0].id;
+}
+
+async function updateProducer(producer_id, region_id, name, description, image_link) {
+  return client
+    .query(updateProd(producer_id, region_id, name, description, image_link))
     .then(result => result)
     .catch(err => console.log(err));
 }
 
 async function getProducerByUserId(user_id) {
-  return client
+  const producer = await client
     .query(selectProducerByUserId(user_id))
     .then(result => result)
     .catch(err => console.log(err));
-}
-
-async function updateProducer(producer_id, region_id, name, description) {
-  return client
-    .query(updateProd(producer_id, region_id, name, description))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
-async function getProducers(page) {
-  return client
-    .query(selectProducers(page))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
-async function getProducersAmount() {
-  return client
-    .query(countProducers())
-    .then(result => result)
-    .catch(err => console.log(err));
+  return producer.rowCount === 0 ? undefined : producer.rows[0]
 }
 
 async function getProducersByStepsAndTypesAndRegion(types, steps, region_id) {
-  return client
+  let producers = await client
     .query(selectProducersByStepsAndTypesAndRegion(types, steps, region_id))
     .then(result => result)
     .catch(err => console.log(err));
+  return producers.rows;
 }
 
+//old functions
 async function deleteProducer(user_id) {
   return client
     .query(dropProducerByUserId(user_id))
@@ -120,25 +110,21 @@ join regions r on r.id = t4.region_id`;
   return answer;
 };
 
-const countProducers = () => 'select count(id) from producers';
-
-const selectProducers = page => `select * from producers order by id offset ${page * 15} fetch first 15 rows only;`;
-
-const updateProd = (producer_id, region_id, name, description) => `update producers set name = '${name}', region_id = ${region_id}, description = '${description}' where id = ${producer_id}`;
+const updateProd = (producer_id, region_id, name, description, image_link) => `update producers set name = '${name}', region_id = ${region_id}, description = '${description}', image_link = '${image_link}' where id = ${producer_id}`;
 
 const insertIntoProducers = (user_id, name, region_id, description, image_link) =>
   `insert into producers(user_id, name, region_id, date_creation, description, image_link) 
-    values (${user_id}, '${name}', ${region_id}, current_date, '${description}', '${image_link}')`;
+    values (${user_id}, '${name}', ${region_id}, current_date, '${description}', '${image_link}') returning id`;
 
 const selectProducerByUserId = user_id => `select * from producers where user_id = ${user_id}`;
 
 module.exports = {
-  createProducer,
   getProducerByUserId,
   updateProducer,
-  getProducers,
-  getProducersAmount,
   getProducersByStepsAndTypesAndRegion,
   deleteProducer,
-  getProducerRegionNamePhoneNumberById
+  getProducerRegionNamePhoneNumberById,
+
+
+  createProducerAndReturnId
 };

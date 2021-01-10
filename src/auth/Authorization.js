@@ -22,6 +22,34 @@ async function registration(email, password) {
   }
 }
 
+async function changePassword(token, oldPassword, newPassword) {
+  const user = await verifyToken(token);
+  if (user === undefined) {
+    return {token: undefined, status: 401, message: 'You are unauthorized.'};
+  } else {
+    if (user.password === oldPassword) {
+      if (checkPassword(newPassword)) {
+        await userService.updatePasswordByEmail(user.username, newPassword);
+        return {token: createToken(user.username, newPassword), status: 200, message: 'OK.'};
+      } else {
+        return {token: undefined, status: 406, message: 'New password is incorrect.'};
+      }
+    } else {
+      return {token: undefined, status: 406, message: 'Old password is incorrect.'};
+    }
+  }
+}
+
+function checkEmail(email){
+  let patternForEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  return patternForEmail.test(email);
+}
+
+function checkPassword(password) {
+  let pattern = /^\w{8,20}$/;
+  return pattern.test(password);
+}
+
 function createToken(username, password) {
   const token = jwt.sign({
     username: username,
@@ -36,18 +64,13 @@ async function verifyToken(token) {
     user = data;
   });
   if (user !== undefined) {
-    return (await userService.findUserByEmailAndPassword(user.username, user.password)) ? user : undefined;
+    return (await userService.isUserExist(user.username, user.password)) ? user : undefined;
   } else return undefined;
 }
 
-function checkEmail(email){
-  let patternForEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-  return email.match(patternForEmail);
-}
-
-function checkPassword(password) {
-  let pattern = /^\w+$/;
-  return pattern.test(password);
+async function validateToken(ctx, next) {
+  ctx.request.user = await verifyToken(ctx.cookies.get('token'));
+  await next();
 }
 
 module.exports = {
@@ -55,5 +78,7 @@ module.exports = {
   verifyToken,
 
   login,
-  registration
+  registration,
+  changePassword,
+  validateToken
 };

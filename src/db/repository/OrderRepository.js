@@ -2,20 +2,24 @@
 
 const client = require('../Connection.js');
 
-async function createOrder(user_id, name, region_id, small_description, description, random_key, image_link) {
-  return client
-    .query(insertOrder(user_id, name, region_id, small_description, description, random_key, image_link))
+async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
+  let orders = await client
+    .query(selectOrdersByStepsAndTypesAndRegion(steps, types, region_id))
     .then(result => result)
     .catch(err => console.log(err));
+  return orders.rows;
 }
 
-async function getOrderByAll(user_id, name, region_id, small_description, description, random_key) {
-  return client
-    .query(selectOrderByAll(user_id, name, region_id, small_description, description, random_key))
+async function createOrderAndGetId(user_id, name, region_id, small_description, description, image_link) {
+  let orderId = await client
+    .query(insertOrder(user_id, name, region_id, small_description, description, image_link))
     .then(result => result)
     .catch(err => console.log(err));
+  return orderId.rows[0].id;
 }
 
+
+//old functions
 async function getOrderByUserIdAndAvailable(user_id, available) {
   return client
     .query(selectOrderByUserIdAndAvailable(user_id, available))
@@ -30,23 +34,9 @@ async function disableOrderByOrderId(order_id, user_id) {
     .catch(err => console.log(err));
 }
 
-async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
-  return client
-    .query(selectOrdersByStepsAndTypesAndRegion(steps, types, region_id))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
 async function deleteOrder(user_id) {
   return client
     .query(dropOrderByUserId(user_id))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
-async function findLastOrder() {
-  return client
-    .query(selectLastOrder())
     .then(result => result)
     .catch(err => console.log(err));
 }
@@ -64,8 +54,6 @@ j.description, j.image_link, u.name as person_name, u.phone from
 (select * from orders where id = ${id}) o 
 join regions r on o.region_id = r.id)) j
 join users u on u.id = j.user_id`
-
-const selectLastOrder = () => 'select * from orders where id = (select max(id) as max from orders);';
 
 const dropOrderByUserId = user_id => `delete from orders where user_id = ${user_id}`;
 
@@ -134,17 +122,15 @@ const selectOrderByAll = (user_id, name, region_id, small_description, descripti
 small_description = '${small_description}' and description = '${description}' and available = true 
 and random_key = '${random_key}'`;
 
-const insertOrder = (user_id, name, region_id, small_description, description, random_key, image_link) =>
-  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, random_key, image_link) 
-VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${random_key}', '${image_link}')`;
+const insertOrder = (user_id, name, region_id, small_description, description, image_link) =>
+  `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, image_link) 
+VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${image_link}')`;
 
 module.exports = {
-  createOrder,
-  getOrderByAll,
+  createOrderAndGetId,
   getOrderByUserIdAndAvailable,
   disableOrderByOrderId,
   getOrdersByStepsAndTypesAndRegion,
   deleteOrder,
-  findLastOrder,
   selectOrderRegionNameAndPhoneNumberByID
 };

@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const Router = require('koa-router');
-const workWithToken = require('./auth/WorkWithToken.js');
+const workWithToken = require('./auth/Authorization.js');
 const regionService = require('./service/RegionService.js');
 const producerService = require('./service/ProducerService.js');
 const typeService = require('./service/TypeService.js');
@@ -10,18 +10,12 @@ const stepService = require('./service/StepService.js');
 const producerStepsService = require('./service/ProducersStepsService.js');
 const producerTypesService = require('./service/ProducersTypesService.js');
 const orderService = require('./service/OrderService.js');
-const s3 = require('./workWithAWS/connectionAWS.js');
-const fs = require('fs');
 const userService = require('./service/UserService.js');
-
 
 const router = new Router();
 
 router
-  .get('/', async ctx => {
-    await ctx.render('index');
-  })
-  .get('/index', async ctx => {
+  .get(['/', '/index'], async ctx => {
     await ctx.render('index');
   })
   .get('/login', async ctx => {
@@ -41,18 +35,9 @@ router
     ctx.response.body = { token: answer.token, message: answer.message};
   })
   .post('/change_password', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      if (data.password === ctx.request.body.old_password) {
-        await userService.updatePasswordByEmail(data.username, ctx.request.body.new_password);
-        const token = workWithToken.createToken({ username: data.username, password: ctx.request.body.new_password });
-        ctx.response.body = { token };
-      } else {
-        ctx.response.body = 'Wrong old password!';
-      }
-    } else {
-      ctx.response.body = 406;
-    }
+    const answer = await workWithToken.changePassword(ctx.cookies.get('token'), ctx.request.body.old_password, ctx.request.body.new_password);
+    ctx.response.status = answer.status;
+    ctx.response.body = { token: answer.token, message: answer.message};
   })
   .get('/user_room', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
@@ -98,84 +83,56 @@ router
     }
   })
   .post('/set_new_user_data', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      await userService.updatePhoneAndNameOfUser(data.username, data.password, ctx.request.body.name, ctx.request.body.phone_number);
-      ctx.response.body = 200;
+    if (ctx.request.user !== undefined) {
+      const answer = await userService.updatePhoneAndNameOfUser(ctx.request.user.username, ctx.request.user.password, ctx.request.body.name, ctx.request.body.phone_number);
+      ctx.status = answer.status;
+      ctx.response.body = {message: answer.message};
     } else {
-      ctx.redirect('/login');
+      ctx.status = 401;
+      ctx.response.body = {message: 'You are unauthorized.'};
     }
   })
-  .post('/create_manufacture', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
-      let image_link = await s3.uploadFile(ctx.request.files.image.path);
-      fs.unlinkSync(ctx.request.files.image.path);
-      if (producer_id === undefined) {
-        await producerService.createProducer(data, ctx.request.body.producer_name, ctx.request.body.region_id, ctx.request.body.description,
-          ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
-        ctx.response.body = 200;
-      } else {
-        ctx.response.body = 406;
-      }
+  .post('/manage_producer', async ctx => {
+    if (ctx.request.user !== undefined) {
+      let answer = await producerService.manageProducer(ctx.request.user.username, ctx.request.body.producer_name, ctx.request.body.region_id,
+        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
+      ctx.status = answer.status;
+      ctx.response.body = {message: answer.message};
     } else {
-      ctx.redirect('/login');
-    }
-  })
-  .post('/update_manufacture', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      const producer_id = await producerService.getProducerIdByUserId(await userService.getUserIdByEmailAndPassword(data.username, data.password));
-      if (producer_id !== -1) {
-        await producerService.updateProducer(producer_id, ctx.request.body.producer_name, ctx.request.body.region_id, ctx.request.body.description, ctx.request.body.types, ctx.request.body.steps);
-        ctx.response.body = 200;
-      } else {
-        ctx.response.body = 406;
-      }
-    } else {
-      ctx.redirect('/login');
+      ctx.status = 401;
+      ctx.response.body = {message: 'You are unauthorized.'};
     }
   })
   .get('/producers', async ctx => {
-    const types = await typeService.getAllTypes();
-    const steps = await stepService.getAllSteps();
-    const regions = await regionService.getAllRegions();
-    await ctx.render('producers', { types, steps, regions });
+    await ctx.render('producers', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions() });
   })
   .post('/producer_page/:page', async ctx => {
-    const producers = await producerService.getProducersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
-    await ctx.render('producers_render', { producers });
+    await ctx.render('producers_render', { producers: await producerService.getProducersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id) });
   })
   .get('/create_order', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      const types = await typeService.getAllTypes();
-      const steps = await stepService.getAllSteps();
-      const regions = await regionService.getAllRegions();
-      await ctx.render('create_order', { types, steps, regions });
+    if (ctx.request.user !== undefined) {
+      await ctx.render('create_order', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions()});
     } else ctx.redirect('/login');
   })
   .post('/create_order', async ctx => {
-    const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
-    if (data !== undefined) {
-      let image_link = await s3.uploadFile(ctx.request.files.image.path);
-      fs.unlinkSync(ctx.request.files.image.path);
-      await orderService.createOrder(data, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
-        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), image_link);
-      ctx.response.status = 200;
-    } else ctx.redirect('/login');
+    if (ctx.request.user !== undefined) {
+      let answer = await orderService.createOrder(ctx.request.user, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
+        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
+      ctx.status = answer.status;
+      ctx.response.body = { message: answer.message };
+    } else {
+      ctx.status = 401;
+      ctx.response.body = { message: 'You are unauthorized.' };
+    }
   })
   .get('/orders', async ctx => {
-    const types = await typeService.getAllTypes();
-    const steps = await stepService.getAllSteps();
-    const regions = await regionService.getAllRegions();
-    await ctx.render('orders', { types, steps, regions });
+    await ctx.render('orders', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions() });
   })
   .post('/order_page/:page', async ctx => {
-    const orders = await orderService.getOrdersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id);
-    await ctx.render('order_render', { orders });
+    await ctx.render('order_render', { orders: await orderService.getOrdersByStepsAndTypesAndRegion(ctx.request.body.types, ctx.request.body.steps, ctx.request.body.region_id) });
   })
+
+
   .get('/orders_history', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     if (data !== undefined) {
@@ -211,7 +168,7 @@ router
   .get('/observe_producer/:id', async ctx => {
     const data = await workWithToken.verifyToken(ctx.cookies.get('token'));
     const producer = await producerService.getProducerRegionNamePhoneNumberById(ctx.request.params.id);
-    await ctx.render('observe_producer', {showNumber: data !== undefined, producer: producer});
+    await ctx.render('observe_producer', { showNumber: data !== undefined, producer: producer });
   });
 
 exports.routes = router.routes();

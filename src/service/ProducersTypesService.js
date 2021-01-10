@@ -7,8 +7,7 @@ async function addProducersTypes(typesList, producer_id) {
 }
 
 async function getTypesByProducerId(producer_id) {
-  const answer = await ProducerTypesRepository.getTypesByProducerId(producer_id);
-  return answer.rows;
+  return await ProducerTypesRepository.getTypesByProducerId(producer_id);
 }
 
 async function deleteTypesByProducerId(producer_id) {

@@ -21,12 +21,8 @@
 </div>
 <div id="room">
     <h2>Hello, <%= username %>!</h2>
-    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal1"> Change my personal data </button>
-    <% if (producer_already_existed) {%>
-    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal2" onclick=""> Update your manufacture </button>
-    <% } else {%>
-    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal2" onclick=""> Add your manufacture </button>
-    <% }%>
+    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal1"> Change my personal data</button>
+    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal2">Manage your manufacture</button>
     <button type="button" class="beauty" onclick="openOrdersHistory()"> Orders History </button>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal3"> Change Password </button>
     <button type="button" class="beauty" onclick="deleteCookies()"> Logout </button>
@@ -221,35 +217,11 @@
     }
 </style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
-    function uploadCreationForm() {
-
-    }
-
     function deleteCookies(){
         document.cookie = 'token=nothing';
         window.location.reload();
-    }
-
-    function setNewPersonalData() {
-        $.ajax({
-            url: '/set_new_user_data',
-            type: 'POST',
-            data: {
-                phone_number: document.getElementById('phone_number').value,
-                name: document.getElementById('name').value
-            },
-            success: (data) => {
-                if (data === 200) {
-                    window.location.replace('/user_room');
-                } else {
-                    window.alert("Wrong password or email!");
-                }
-            }
-        });
     }
 
     function createManufacture() {
@@ -274,7 +246,7 @@
       formData.append('steps', steps_for_request);
       formData.append('region_id', document.getElementById('region_id').value,);
       formData.append('description', document.getElementById('description').value);
-      fetch("/create_manufacture", {
+      fetch("/manage_producer", {
         method: "POST",
         body: formData,
       }).then(data => {
@@ -319,25 +291,47 @@
     }
 
     function changePassword() {
-        $.ajax({
-            url: '/change_password',
-            type: 'POST',
-            data: {
-                new_password: document.getElementById('new_password').value,
-                old_password: document.getElementById('old_password').value,
-            },
-            success: (data) => {
-                if (data === 406) {
-                    window.location.replace('/user_room');
-                } else {
-                    if (data === 'Wrong old password!') {
-                        window.alert("Wrong old password!");
-                    } else {
-                        document.cookie = 'token=' + data.token;
-                        window.location.replace('/user_room');
-                    }
-                }
-            }
+      let fd = new FormData();
+      fd.append('new_password', document.getElementById('new_password').value);
+      fd.append('old_password', document.getElementById('old_password').value);
+      fetch('/change_password', {method: 'POST', body: fd})
+        .then(data => {
+          if (data.status === 406) {
+            data.text()
+              .then(body => JSON.parse(body))
+              .then(parsedBody => {
+                window.alert(parsedBody.message);
+              })
+          } else if (data.status === 200) {
+            data.text()
+              .then(body => JSON.parse(body))
+              .then(parsedBody => {
+                document.cookie = 'token=' + parsedBody.token;
+                window.location.replace('/user_room');
+              })
+          } else {
+            window.alert("Ups, something wrong!");
+          }
+        });
+    }
+
+    function setNewPersonalData() {
+      let fd = new FormData();
+      fd.append('phone_number', document.getElementById('phone_number').value);
+      fd.append('name', document.getElementById('name').value);
+      fetch('/set_new_user_data', { method: 'POST', body: fd })
+        .then(data => {
+          if (data.status === 406) {
+            data.text()
+              .then(body => JSON.parse(body))
+              .then(parsedBody => {
+                window.alert(parsedBody.message);
+              })
+          } else if (data.status === 200) {
+            window.location.replace('/user_room');
+          } else {
+            window.alert("Ups, something wrong!");
+          }
         });
     }
 

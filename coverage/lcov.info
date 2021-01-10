@@ -238,7 +238,7 @@ BRF:40
 BRH:18
 end_of_record
 TN:
-SF:src\auth\WorkWithToken.js
+SF:src\auth\Authorization.js
 FN:5,createToken
 FN:13,verifyToken
 FN:15,(anonymous_2)

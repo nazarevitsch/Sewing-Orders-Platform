@@ -21,21 +21,12 @@ async function isEmailAlreadyUsed(email) {
     .query(searchEmail(email))
     .then(result => result)
     .catch(err => console.log(err));
-  return user.rowCount === 1;
+  return user.rowCount > 0;
 }
 
 async function createUser(email, password) {
   return client
     .query(insertUser(email, password))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
-//old functions
-
-async function searchUserByEmailAndPassword(email, password) {
-  return client
-    .query(selectUserByEmailAndPassword(email, password))
     .then(result => result)
     .catch(err => console.log(err));
 }
@@ -55,8 +46,18 @@ async function updatePhoneAndNameOfUser(email, password, name, phone) {
 }
 
 async function getUserByEmail(email) {
-  return client
+  let user = await client
     .query(selectUserByEmail(email))
+    .then(result => result)
+    .catch(err => console.log(err));
+  return user.rowCount === 1 ? user.rows[0] : undefined;
+}
+
+//old functions
+
+async function searchUserByEmailAndPassword(email, password) {
+  return client
+    .query(selectUserByEmailAndPassword(email, password))
     .then(result => result)
     .catch(err => console.log(err));
 }

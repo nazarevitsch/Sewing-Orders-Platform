@@ -3,7 +3,7 @@ create table users(
     id serial primary key,
     email varchar(30),
     password varchar(30),
-    name varchar(30),
+    name varchar(25),
     phone varchar(30),
     date_creation date
 );
@@ -47,7 +47,6 @@ create table orders(
     name varchar(100),
     region_id int,
     available bool,
-    random_key varchar(10),
     small_description text,
     description text,
     date_creation date,
