@@ -7,8 +7,6 @@ const regionService = require('./service/RegionService.js');
 const producerService = require('./service/ProducerService.js');
 const typeService = require('./service/TypeService.js');
 const stepService = require('./service/StepService.js');
-const producerStepsService = require('./service/ProducersStepsService.js');
-const producerTypesService = require('./service/ProducersTypesService.js');
 const orderService = require('./service/OrderService.js');
 const userService = require('./service/UserService.js');
 
@@ -120,48 +118,45 @@ router
     const producer = await producerService.getProducerRegionNamePhoneNumberById(ctx.request.params.id);
     await ctx.render('observe_producer', { showNumber: ctx.request.user !== undefined, producer: producer });
   })
-
-
-
-
   .get('/user_room', async ctx => {
     if (ctx.request.user !== undefined) {
-      const regions = await regionService.getAllRegions();
-      const steps = await stepService.getAllSteps();
-      const types = await typeService.getAllTypes();
-      const producer = await producerService.getProducerByUserId(ctx.request.user.id);
-      if (producer !== undefined) {
-        const producer_types = await producerTypesService.getTypesByProducerId(producer.id);
-        const producer_steps = await producerStepsService.getStepsByProducerId(producer.id);
-        for (let i = 0; i < steps.length; i++) {
-          for (let l = 0; l < producer_steps.length; l++) {
-            if (steps[i].id === producer_steps[l].manufacturing_step_id) {
-              steps[i].check = true;
-              break;
-            }
-          }
-        }
-        for (let i = 0; i < types.length; i++) {
-          for (let l = 0; l < producer_types.length; l++) {
-            if (types[i].id === producer_types[l].sewing_type_id) {
-              types[i].check = true;
-              break;
-            }
-          }
-        }
-      }
       await ctx.render('user_room', {
         username: ctx.request.user.email,
         name: ctx.request.user.name,
         phone: ctx.request.user.phone,
-        regions,
-        steps,
-        types,
-        producer_already_existed: (producer !== undefined),
-        region_id: producer === undefined ? -1 : producer.region_id,
-        producer_name: producer === undefined ? '' : producer.name
       });
+    } else ctx.redirect('/login');
+  })
+  .get('/manage_producer', async ctx => {
+    if (ctx.request.user !== undefined) {
     } else ctx.redirect('/login');
   });
 
 exports.routes = router.routes();
+
+
+
+// const regions = await regionService.getAllRegions();
+// const steps = await stepService.getAllSteps();
+// const types = await typeService.getAllTypes();
+// const producer = await producerService.getProducerByUserId(ctx.request.user.id);
+// if (producer !== undefined) {
+//   const producer_types = await producerTypesService.getTypesByProducerId(producer.id);
+//   const producer_steps = await producerStepsService.getStepsByProducerId(producer.id);
+//   for (let i = 0; i < steps.length; i++) {
+//     for (let l = 0; l < producer_steps.length; l++) {
+//       if (steps[i].id === producer_steps[l].manufacturing_step_id) {
+//         steps[i].check = true;
+//         break;
+//       }
+//     }
+//   }
+//   for (let i = 0; i < types.length; i++) {
+//     for (let l = 0; l < producer_types.length; l++) {
+//       if (types[i].id === producer_types[l].sewing_type_id) {
+//         types[i].check = true;
+//         break;
+//       }
+//     }
+//   }
+// }

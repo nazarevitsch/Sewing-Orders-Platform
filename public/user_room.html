@@ -7,7 +7,6 @@
     <title>User Room</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type ="text/javascript" src="js/authentication.js"></script>
-    <script type ="text/javascript" src="js/producers.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -24,7 +23,7 @@
 <div id="room">
     <h2>Hello, <%= username %>!</h2>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal1"> Change my personal data</button>
-    <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal2">Manage your manufacture</button>
+    <a href="/manage_producer"><button type="button" class="beauty" data-toggle="modal">Manage your manufacture</button></a>
     <a href="/orders_history"><button type="button" class="beauty"> Orders History </button></a>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal3"> Change Password </button>
     <button type="button" class="beauty" onclick="deleteCookies()"> Logout </button>
@@ -49,61 +48,6 @@
             <div class="modal-footer">
                 <button type="button" class="beauty-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="beauty" onclick="setNewPersonalData()">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Producer data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="first">
-                <form>
-                    <label>Name of your manufacture: <input type="text" name="" id="producer_name" value="<%=producer_name%>"/></label>
-                    <label>Region:
-                        <select id="region_id">
-                            <% for (var i = 0; i < regions.length; i++) { %>
-                            <% if (regions[i].id === region_id) {%>
-                            <option value="<%= regions[i].id%>" selected><%= regions[i].region_name%></option>
-                            <%} else {%>
-                            <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
-                            <% } %>
-                            <% } %>
-                        </select>
-                    </label>
-                    <div><label>Types:</label>
-                        <% for (var i = 0; i < types.length; i++) { %>
-                        <p><%= types[i].name %>:  <input type="checkbox" name="producer_types" value="<%= types[i].id %>"
-                            <% if (types[i].check) {%>
-                            checked
-                            <%}%>
-                        /></p>
-                        <% } %>
-                    </div>
-                    <div><label>Steps:</label>
-                        <% for (var i = 0; i < steps.length; i++) { %>
-                        <p><%= steps[i].name %>:  <input type="checkbox" name="producer_steps" value="<%= steps[i].id %>"
-                            <% if (steps[i].check) {%>
-                            checked
-                            <%}%>/></p>
-                        <% } %>
-                    </div>
-                    <label>Description:
-                        <textarea id="description" name="description" rows="7" cols="48" placeholder="Enter description.">
-                        </textarea>
-                    </label>
-                    <label>Additional media: <br/> <input style="border: none;" type="file" id="file"/></label>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="beauty-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="beauty" onclick="createManufacture()">Create Manufacture</button>
             </div>
         </div>
     </div>
