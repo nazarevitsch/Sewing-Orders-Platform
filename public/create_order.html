@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Website to help clients search for clothes manufacturers. Create custom orders.">
     <title>Create Order</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type ="text/javascript" src="js/orders.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
 </head>
@@ -161,39 +161,6 @@
         border-radius: 20px;
     }
 </style>
-<script>
-  function create_order() {
-    let types = document.getElementsByName('producer_types');
-    let steps = document.getElementsByName('producer_steps');
-    let types_for_request = [];
-    let steps_for_request = [];
-    for (let i = 0; i < types.length; i++) {
-      if (types[i].checked) {
-        types_for_request.push(types[i].getAttribute('value'));
-      }
-    }
-    for (let i = 0; i < steps.length; i++) {
-      if (steps[i].checked) {
-        steps_for_request.push(steps[i].getAttribute('value'));
-      }
-    }
-    var formData = new FormData();
-    formData.append('image', document.getElementById('file').files[0]);
-    formData.append('name', document.getElementById('name').value);
-    formData.append('types', types_for_request);
-    formData.append('steps', steps_for_request);
-    formData.append('region_id', document.getElementById('region_id').value,);
-    formData.append('description', document.getElementById('description').value);
-    formData.append('small_description', document.getElementById('small_description').value);
-    fetch('/create_order', {
-      method: 'POST',
-      body: formData})
-      .then(data => {
-      if (data.status === 200) location.replace('/user_room');
-      else alert('Something is wrong!');
-    });
-  }
-</script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </html>

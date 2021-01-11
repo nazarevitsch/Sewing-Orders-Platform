@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Website to help clients search for clothes manufacturers">
     <title>Forgot Password</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type ="text/javascript" src="js/authentication.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
     <style>
@@ -117,34 +117,6 @@
         margin: auto;
     }
 </style>
-<script>
-    function registration() {
-      let fd = new FormData();
-      fd.append('username', document.getElementById('username').value);
-      fd.append('password', document.getElementById('password').value);
-      fetch('/registration',
-        {
-          method: 'POST',
-          body: fd
-        })
-        .then(data => {
-          if (data.status === 406) {
-            data.text()
-              .then(body => JSON.parse(body))
-              .then(parsedBody => alert(parsedBody.message));
-          } else if (data.status === 200) {
-            data.text()
-              .then(body => JSON.parse(body))
-              .then(parsedBody => {
-                document.cookie = 'token=' + parsedBody.token;
-                window.location.replace('/user_room');
-              })
-          } else {
-            window.alert("Ups, something wrong!");
-          }
-        });
-    }
-</script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </body>
 </html>

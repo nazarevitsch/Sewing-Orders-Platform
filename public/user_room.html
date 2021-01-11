@@ -6,6 +6,8 @@
     <meta name="description" content="Website to help clients search for clothes manufacturers">
     <title>User Room</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type ="text/javascript" src="js/authentication.js"></script>
+    <script type ="text/javascript" src="js/producers.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,7 +25,7 @@
     <h2>Hello, <%= username %>!</h2>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal1"> Change my personal data</button>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal2">Manage your manufacture</button>
-    <button type="button" class="beauty" onclick="openOrdersHistory()"> Orders History </button>
+    <a href="/orders_history"><button type="button" class="beauty"> Orders History </button></a>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal3"> Change Password </button>
     <button type="button" class="beauty" onclick="deleteCookies()"> Logout </button>
 </div>
@@ -101,11 +103,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="beauty-secondary" data-dismiss="modal">Close</button>
-                <% if (producer_already_existed) {%>
-                <button type="button" class="beauty" onclick="updateManufacture()">Update Manufacture</button>
-                <%} else {%>
                 <button type="button" class="beauty" onclick="createManufacture()">Create Manufacture</button>
-                <%}%>
             </div>
         </div>
     </div>
@@ -218,90 +216,4 @@
 </style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script>
-    function deleteCookies(){
-        document.cookie = 'token=nothing';
-        window.location.replace('/login');
-    }
-
-    function createManufacture() {
-      let types = document.getElementsByName('producer_types');
-      let steps = document.getElementsByName('producer_steps');
-      let types_for_request = [];
-      let steps_for_request = [];
-      for (let i = 0; i < types.length; i++) {
-        if (types[i].checked) {
-          types_for_request.push(types[i].getAttribute('value'));
-        }
-      }
-      for (let i = 0; i < steps.length; i++) {
-        if (steps[i].checked) {
-          steps_for_request.push(steps[i].getAttribute('value'));
-        }
-      }
-      var formData = new FormData();
-      formData.append('image', document.getElementById("file").files[0]);
-      formData.append('producer_name', document.getElementById('producer_name').value);
-      formData.append('types', types_for_request);
-      formData.append('steps', steps_for_request);
-      formData.append('region_id', document.getElementById('region_id').value,);
-      formData.append('description', document.getElementById('description').value);
-      fetch("/manage_producer", {
-        method: "POST",
-        body: formData,
-      }).then(data => {
-        if (data.status === 200) location.replace('/user_room');
-        else window.alert("You can't!")
-      });
-    }
-
-    function changePassword() {
-      let fd = new FormData();
-      fd.append('new_password', document.getElementById('new_password').value);
-      fd.append('old_password', document.getElementById('old_password').value);
-      fetch('/change_password', {method: 'POST', body: fd})
-        .then(data => {
-          if (data.status === 406) {
-            data.text()
-              .then(body => JSON.parse(body))
-              .then(parsedBody => {
-                window.alert(parsedBody.message);
-              })
-          } else if (data.status === 200) {
-            data.text()
-              .then(body => JSON.parse(body))
-              .then(parsedBody => {
-                document.cookie = 'token=' + parsedBody.token;
-                window.location.replace('/user_room');
-              })
-          } else {
-            window.alert("Ups, something wrong!");
-          }
-        });
-    }
-
-    function setNewPersonalData() {
-      let fd = new FormData();
-      fd.append('phone_number', document.getElementById('phone_number').value);
-      fd.append('name', document.getElementById('name').value);
-      fetch('/set_new_user_data', { method: 'POST', body: fd })
-        .then(data => {
-          if (data.status === 406) {
-            data.text()
-              .then(body => JSON.parse(body))
-              .then(parsedBody => {
-                window.alert(parsedBody.message);
-              })
-          } else if (data.status === 200) {
-            window.location.replace('/user_room');
-          } else {
-            window.alert("Ups, something wrong!");
-          }
-        });
-    }
-
-    function openOrdersHistory() {
-      window.location.replace('/orders_history');
-    }
-</script>
 </html>

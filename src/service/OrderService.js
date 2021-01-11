@@ -22,12 +22,11 @@ async function createOrder(user, name, region_id, small_description, description
 }
 
 async function getHistoryOfOrdersByUserId(userId) {
-  return {available: await getOrderByUserIdAndAvailable(userId, true), unavailable: await getOrderByUserIdAndAvailable(userId, false)};
+  return {available: await getOrdersByUserIdAndAvailable(userId, true), unavailable: await getOrdersByUserIdAndAvailable(userId, false)};
 }
 
-async function getOrderByUserIdAndAvailable(user_id, available) {
-  const answer = await OrderRepository.getOrderByUserIdAndAvailable(user_id, available);
-  return answer.rows;
+async function getOrdersByUserIdAndAvailable(userId, available) {
+  return await OrderRepository.getOrdersByUserIdAndAvailable(userId, available);
 }
 
 async function disableOrderByOrderIdAndUserId(order_id, user_id) {
@@ -45,7 +44,7 @@ async function deleteOrder(email, password) {
 
 module.exports = {
   createOrder,
-  getOrderByUserIdAndAvailable,
+  getOrdersByUserIdAndAvailable,
   disableOrderByOrderIdAndUserId,
   getOrdersByStepsAndTypesAndRegion,
   deleteOrder,

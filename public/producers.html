@@ -6,6 +6,7 @@
     <meta name="description" content="Website to help clients search for clothes manufacturers.">
     <title>Producers</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type ="text/javascript" src="js/producers.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
     <style>
@@ -163,35 +164,6 @@
 </style>
 <script>
   openPage(0);
-
-  function openPage(page) {
-    let types = document.getElementsByName('producer_types');
-    let steps = document.getElementsByName('producer_steps');
-    let types_for_request = [];
-    let steps_for_request = [];
-    for (let i = 0; i < types.length; i++) {
-      if (types[i].checked) {
-        types_for_request.push(types[i].getAttribute('value'));
-      }
-    }
-    for (let i = 0; i < steps.length; i++) {
-      if (steps[i].checked) {
-        steps_for_request.push(steps[i].getAttribute('value'));
-      }
-    }
-    $.ajax({
-      url: '/producer_page/' + page,
-      type: 'POST',
-      data: {
-        types: types_for_request,
-        steps: steps_for_request,
-        region_id: document.getElementById('region_id').value
-      },
-      success: (data) => {
-        document.getElementById('producers').innerHTML = data;
-      }
-    });
-  }
 </script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">

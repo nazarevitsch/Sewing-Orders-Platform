@@ -7,7 +7,6 @@ async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
     .query(selectOrdersByStepsAndTypesAndRegion(steps, types, region_id))
     .then(result => result)
     .catch(err => console.log(err));
-  console.log(orders);
   return orders.rows;
 }
 
@@ -19,7 +18,7 @@ async function createOrderAndGetId(user_id, name, region_id, small_description, 
   return orderId.rows[0].id;
 }
 
-async function getOrderByUserIdAndAvailable(user_id, available) {
+async function getOrdersByUserIdAndAvailable(user_id, available) {
   let orders = await client
     .query(selectOrderByUserIdAndAvailable(user_id, available))
     .then(result => result)
@@ -124,7 +123,7 @@ VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${des
 
 module.exports = {
   createOrderAndGetId,
-  getOrderByUserIdAndAvailable,
+  getOrdersByUserIdAndAvailable,
   disableOrderByOrderId,
   getOrdersByStepsAndTypesAndRegion,
   deleteOrder,

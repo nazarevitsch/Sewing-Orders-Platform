@@ -98,13 +98,15 @@ router
   })
   .get('/orders_history', async ctx => {
     if (ctx.request.user !== undefined) {
-      const orderHistory = orderService.getHistoryOfOrdersByUserId(ctx.request.user.userId);
+      const orderHistory = await orderService.getHistoryOfOrdersByUserId(ctx.request.user.id);
       await ctx.render('orders_history', { available_orders: orderHistory.available, unavailable_orders: orderHistory.unavailable });
     } else ctx.redirect('/login');
   })
   .post('/disable_order/:id', async ctx => {
     if (ctx.request.user !== undefined) {
-      await orderService.disableOrderByOrderIdAndUserId(ctx.request.params.id, ctx.request.user.userId);
+      await orderService.disableOrderByOrderIdAndUserId(ctx.request.params.id, ctx.request.user.id);
+      ctx.status = 200;
+      ctx.response.body = { message: 'Ok.' };
     } else {
       ctx.status = 401;
       ctx.response.body = { message: 'You are unauthorized.' };
