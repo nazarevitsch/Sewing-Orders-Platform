@@ -124,17 +124,12 @@
 </style>
 <script>
   function disable_order(id) {
-    $.ajax({
-      url: '/disable_order/' + id,
-      type: 'POST',
-      success: (data) => {
-        window.location.reload();
-      }
-    });
-  }
 
-  function update_order(id) {
-
+    fetch('/disable_order/' + id, { method: 'POST'})
+      .then(data => {
+        if (data.status === 200) location.reload();
+        else window.alert("Ups, something wrong!");
+      });
   }
 </script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"

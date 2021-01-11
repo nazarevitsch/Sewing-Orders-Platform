@@ -221,7 +221,7 @@
 <script>
     function deleteCookies(){
         document.cookie = 'token=nothing';
-        window.location.reload();
+        window.location.replace('/login');
     }
 
     function createManufacture() {
@@ -253,41 +253,6 @@
         if (data.status === 200) location.replace('/user_room');
         else window.alert("You can't!")
       });
-    }
-
-    function updateManufacture() {
-        let types = document.getElementsByName('producer_types');
-        let steps = document.getElementsByName('producer_steps');
-        let types_for_request = [];
-        let steps_for_request = [];
-        for (let i = 0; i < types.length; i++){
-            if (types[i].checked){
-                types_for_request.push(types[i].getAttribute('value'));
-            }
-        }
-        for (let i = 0; i < steps.length; i++){
-            if (steps[i].checked){
-                steps_for_request.push(steps[i].getAttribute('value'));
-            }
-        }
-        $.ajax({
-            url: '/update_manufacture',
-            type: 'POST',
-            data: {
-                producer_name: document.getElementById('producer_name').value,
-                description: document.getElementById('description').value,
-                region_id: document.getElementById('region_id').value,
-                steps: steps_for_request,
-                types: types_for_request
-            },
-            success: (data) => {
-                if (data === 200) {
-                    window.location.replace('/user_room');
-                } else {
-                    window.alert("You can't!");
-                }
-            }
-        });
     }
 
     function changePassword() {

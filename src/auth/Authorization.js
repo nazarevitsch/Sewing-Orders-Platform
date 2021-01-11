@@ -2,7 +2,8 @@
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const userService = require('../service/UserService');
+const userService = require('../service/UserService.js');
+const mailSender = require('../email/MailSender.js');
 
 async function login(email, password){
   if ((await userService.isUserExist(email, password))){
@@ -40,6 +41,27 @@ async function changePassword(token, oldPassword, newPassword) {
   }
 }
 
+async function forgotPassword(email) {
+  const user = userService.getUserByEmail(email);
+  if (user === undefined){
+    return {status: 406, message: 'User with such email does not exists.'}
+  } else {
+    const newPassword = await makeKey(10);
+    await userService.updatePasswordByEmail(email, newPassword);
+    await mailSender.sendMail(email, 'New Password', `Your new password: ${newPassword}`);
+    return {status: 200, message: 'New password was sent to email.'}
+  }
+}
+
+async function makeKey(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 function checkEmail(email){
   let patternForEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   return patternForEmail.test(email);
@@ -64,7 +86,8 @@ async function verifyToken(token) {
     user = data;
   });
   if (user !== undefined) {
-    return (await userService.isUserExist(user.username, user.password)) ? user : undefined;
+    let userDB = await userService.getUserByEmailAndPassword(user.username, user.password);
+    return (user.username === userDB.email && user.password === userDB.password) ? userDB : undefined;
   } else return undefined;
 }
 
@@ -76,9 +99,9 @@ async function validateToken(ctx, next) {
 module.exports = {
   createToken,
   verifyToken,
-
   login,
   registration,
   changePassword,
-  validateToken
+  validateToken,
+  forgotPassword
 };

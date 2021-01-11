@@ -7,6 +7,7 @@ async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
     .query(selectOrdersByStepsAndTypesAndRegion(steps, types, region_id))
     .then(result => result)
     .catch(err => console.log(err));
+  console.log(orders);
   return orders.rows;
 }
 
@@ -18,13 +19,12 @@ async function createOrderAndGetId(user_id, name, region_id, small_description, 
   return orderId.rows[0].id;
 }
 
-
-//old functions
 async function getOrderByUserIdAndAvailable(user_id, available) {
-  return client
+  let orders = await client
     .query(selectOrderByUserIdAndAvailable(user_id, available))
     .then(result => result)
     .catch(err => console.log(err));
+  return orders.rows;
 }
 
 async function disableOrderByOrderId(order_id, user_id) {
@@ -41,6 +41,7 @@ async function deleteOrder(user_id) {
     .catch(err => console.log(err));
 }
 
+//old functions
 async function selectOrderRegionNameAndPhoneNumberByID(id) {
   return client
     .query(orderRegionNameAndPhoneNumberByID(id))
@@ -117,14 +118,9 @@ const disOrderByOrderId = (order_id, user_id) => `update orders set available = 
 const selectOrderByUserIdAndAvailable = (user_id, available) => `select id, name, to_char(date_creation, 'DD Mon YYYY') as date from orders 
 where user_id = ${user_id} and available = ${available}`;
 
-const selectOrderByAll = (user_id, name, region_id, small_description, description, random_key) =>
-  `select * from orders where user_id = ${user_id} and name = '${name}' and region_id = ${region_id} and 
-small_description = '${small_description}' and description = '${description}' and available = true 
-and random_key = '${random_key}'`;
-
 const insertOrder = (user_id, name, region_id, small_description, description, image_link) =>
   `insert into orders(user_id, name, region_id, available, small_description, description, date_creation, image_link) 
-VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${image_link}')`;
+VALUES(${user_id}, '${name}', ${region_id}, true, '${small_description}', '${description}', current_date, '${image_link}') returning id`;
 
 module.exports = {
   createOrderAndGetId,

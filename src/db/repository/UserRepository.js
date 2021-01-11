@@ -55,13 +55,6 @@ async function getUserByEmail(email) {
 
 //old functions
 
-async function searchUserByEmailAndPassword(email, password) {
-  return client
-    .query(selectUserByEmailAndPassword(email, password))
-    .then(result => result)
-    .catch(err => console.log(err));
-}
-
 async function deleteUserByEmailAndPassword(email, password) {
   return client
     .query(deleteUser(email, password))
@@ -87,13 +80,9 @@ module.exports = {
   updatePhoneAndNameOfUser,
   isEmailAlreadyUsed,
   updatePasswordByEmail,
-  searchUserByEmailAndPassword,
   createUser,
   getUserByEmail,
   deleteUserByEmailAndPassword,
-
-
-
   getUserByEmailAndPassword,
   isUserExist
 };
