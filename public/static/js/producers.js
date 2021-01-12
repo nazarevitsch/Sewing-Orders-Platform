@@ -27,7 +27,7 @@ function openPage(page) {
   });
 }
 
-function createManufacture() {
+function manageProducer() {
   let types = document.getElementsByName('producer_types');
   let steps = document.getElementsByName('producer_steps');
   let types_for_request = [];
@@ -42,9 +42,10 @@ function createManufacture() {
       steps_for_request.push(steps[i].getAttribute('value'));
     }
   }
-  var formData = new FormData();
+  let formData = new FormData();
   formData.append('image', document.getElementById("file").files[0]);
-  formData.append('producer_name', document.getElementById('producer_name').value);
+  formData.append('same_image', (formData.get('image').size === undefined));
+  formData.append('producer_name', document.getElementById('name').value);
   formData.append('types', types_for_request);
   formData.append('steps', steps_for_request);
   formData.append('region_id', document.getElementById('region_id').value,);

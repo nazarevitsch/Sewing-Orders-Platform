@@ -18,7 +18,7 @@ async function updateProducer(producer_id, region_id, name, description, image_l
 }
 
 async function getProducerByUserId(user_id) {
-  const producer = await client
+  let producer = await client
     .query(selectProducerByUserId(user_id))
     .then(result => result)
     .catch(err => console.log(err));

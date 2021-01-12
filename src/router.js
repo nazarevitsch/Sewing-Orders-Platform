@@ -57,8 +57,9 @@ router
   })
   .post('/manage_producer', async ctx => {
     if (ctx.request.user !== undefined) {
-      let answer = await producerService.manageProducer(ctx.request.user.email, ctx.request.body.producer_name, ctx.request.body.region_id,
-        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
+      let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
+        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.same_image,
+        (ctx.request.body.same_image === true) ? undefined : ctx.request.files.image.path);
       ctx.status = answer.status;
       ctx.response.body = {message: answer.message};
     } else {
@@ -120,43 +121,13 @@ router
   })
   .get('/user_room', async ctx => {
     if (ctx.request.user !== undefined) {
-      await ctx.render('user_room', {
-        username: ctx.request.user.email,
-        name: ctx.request.user.name,
-        phone: ctx.request.user.phone,
-      });
+      await ctx.render('user_room', { user: ctx.request.user });
     } else ctx.redirect('/login');
   })
   .get('/manage_producer', async ctx => {
     if (ctx.request.user !== undefined) {
+      await ctx.render('manage_producer', await producerService.getProducerForRendering(ctx.request.user.id));
     } else ctx.redirect('/login');
   });
 
 exports.routes = router.routes();
-
-
-
-// const regions = await regionService.getAllRegions();
-// const steps = await stepService.getAllSteps();
-// const types = await typeService.getAllTypes();
-// const producer = await producerService.getProducerByUserId(ctx.request.user.id);
-// if (producer !== undefined) {
-//   const producer_types = await producerTypesService.getTypesByProducerId(producer.id);
-//   const producer_steps = await producerStepsService.getStepsByProducerId(producer.id);
-//   for (let i = 0; i < steps.length; i++) {
-//     for (let l = 0; l < producer_steps.length; l++) {
-//       if (steps[i].id === producer_steps[l].manufacturing_step_id) {
-//         steps[i].check = true;
-//         break;
-//       }
-//     }
-//   }
-//   for (let i = 0; i < types.length; i++) {
-//     for (let l = 0; l < producer_types.length; l++) {
-//       if (types[i].id === producer_types[l].sewing_type_id) {
-//         types[i].check = true;
-//         break;
-//       }
-//     }
-//   }
-// }

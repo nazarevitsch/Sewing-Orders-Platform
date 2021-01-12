@@ -21,7 +21,7 @@
     </ul>
 </div>
 <div id="room">
-    <h2>Hello, <%= username %>!</h2>
+    <h2>Hello, <%= user.email %>!</h2>
     <button type="button" class="beauty" data-toggle="modal" data-target="#exampleModal1"> Change my personal data</button>
     <a href="/manage_producer"><button type="button" class="beauty" data-toggle="modal">Manage your manufacture</button></a>
     <a href="/orders_history"><button type="button" class="beauty"> Orders History </button></a>
@@ -40,9 +40,9 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <label>Phone: <input type="text" name="" id="phone_number" value="<%= phone %>"/></label>
+                    <label>Phone: <input type="text" name="" id="phone_number" value="<%= user.phone %>"/></label>
                     <br/>
-                    <label>Name: <input type="text" name="" id="name" value="<%= name %>"/></label>
+                    <label>Name: <input type="text" name="" id="name" value="<%= user.name %>"/></label>
                 </form>
             </div>
             <div class="modal-footer">
