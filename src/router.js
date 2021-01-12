@@ -13,7 +13,10 @@ const userService = require('./service/UserService.js');
 const router = new Router();
 
 router
-  .get(['/', '/index'], async ctx => {
+  .get('/', async ctx => {
+    await ctx.render('index');
+  })
+  .get('/index', async ctx => {
     await ctx.render('index');
   })
   .get('/login', async ctx => {
