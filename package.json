@@ -10,8 +10,7 @@
     "lintfix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prof": "node --prof index.js",
     "crete_prof": "node --prof-process isolate-0000024E857C16F0-4864-v8.log > processed.txt",
-    "stryker": "stryker run",
-    "build": "tsc"
+    "stryker": "stryker run"
   },
   "keywords": [],
   "author": "",
