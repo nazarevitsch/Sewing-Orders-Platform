@@ -62,7 +62,7 @@ async function makeKey(length) {
 }
 
 function checkEmail(email){
-  let patternForEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  let patternForEmail = /^[\w\.]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   return patternForEmail.test(email);
 }
 

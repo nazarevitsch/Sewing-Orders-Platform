@@ -5,7 +5,6 @@ const UserService = require('./UserService.js');
 const OrdersStepsService = require('./OrdersStepsService.js');
 const OrdersTypesService =  require('./OrderTypesService.js');
 const s3 = require('../workWithAWS/connectionAWS.js');
-const fs = require('fs');
 
 
 async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
@@ -14,7 +13,6 @@ async function getOrdersByStepsAndTypesAndRegion(steps, types, region_id) {
 
 async function createOrder(user, name, region_id, small_description, description, types, steps, pathToFile) {
   let image_link = await s3.uploadFile(pathToFile);
-  fs.unlinkSync(pathToFile);
   let orderId = await OrderRepository.createOrderAndGetId(user.id, name, region_id, small_description, description, image_link);
   if (types.length > 0) await OrdersTypesService.createOrdersTypes(orderId, types);
   if (steps.length > 0) await OrdersStepsService.createOrdersSteps(orderId, steps);

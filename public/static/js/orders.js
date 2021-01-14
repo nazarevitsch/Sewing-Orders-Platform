@@ -29,13 +29,49 @@ function create_order() {
   formData.append('region_id', document.getElementById('region_id').value,);
   formData.append('description', document.getElementById('description').value);
   formData.append('small_description', document.getElementById('small_description').value);
-  fetch('/create_order', {
-    method: 'POST',
-    body: formData})
-    .then(data => {
-      if (data.status === 200) location.replace('/user_room');
-      else alert('Something is wrong!');
-    });
+  if (validateOrderData(formData)) {
+    fetch('/create_order', {
+      method: 'POST',
+      body: formData
+    })
+      .then(data => {
+        if (data.status === 200) location.replace('/user_room');
+        else alert('Something is wrong!');
+      });
+  }
+}
+
+function validateOrderData(formData) {
+  let message = '';
+  let flag = true;
+  if(formData.get('image').size === undefined) {
+    message += "Оберіть файл\n";
+    flag = false;
+  }
+  if (formData.get('name').length < 10){
+    message +="Введіть назву замовлення(мін 10 літер)\n";
+    flag = false;
+  }
+  if (formData.get('types').length === 0){
+    message += "Оберіть хоча б один тип виробництва\n";
+    flag = false;
+  }
+  if (formData.get('steps').length === 0){
+    message += "Оберіть хоча б один крок виробництва\n";
+    flag = false;
+  }
+  if (formData.get('small_description').length < 6){
+    message +="Введіть малий опис замовлення\n";
+    flag = false;
+  }
+  if (formData.get('description').length < 6){
+    message +="Введіть опис замовлення\n";
+    flag = false;
+  }
+  if(!flag){
+    alert(message);
+  }
+  return flag
 }
 
 function openPage(page) {

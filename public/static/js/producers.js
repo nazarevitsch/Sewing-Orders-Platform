@@ -50,11 +50,40 @@ function manageProducer() {
   formData.append('steps', steps_for_request);
   formData.append('region_id', document.getElementById('region_id').value,);
   formData.append('description', document.getElementById('description').value);
-  fetch("/manage_producer", {
-    method: "POST",
-    body: formData,
-  }).then(data => {
-    if (data.status === 200) location.replace('/user_room');
-    else window.alert("You can't!")
-  });
+  if (validateProducerData(formData)) {
+    fetch("/manage_producer", {
+      method: "POST",
+      body: formData,
+    }).then(data => {
+      if (data.status === 200) location.replace('/user_room');
+      else if (data.status === 406) {
+        window.alert("Data is unacceptable!")
+      } else window.alert("Ups something wrong.")
+    });
+  }
+}
+
+function validateProducerData(formData) {
+  let message = '';
+  let flag = true;
+  if (formData.get('producer_name').length < 10){
+    message +="Введіть назву замовлення(мін 10 літер)\n";
+    flag = false;
+  }
+  if (formData.get('types').length === 0){
+    message += "Оберіть хоча б один тип виробництва\n";
+    flag = false;
+  }
+  if (formData.get('steps').length === 0){
+    message += "Оберіть хоча б один крок виробництва\n";
+    flag = false;
+  }
+  if (formData.get('description').length < 6){
+    message +="Введіть опис замовлення\n";
+    flag = false;
+  }
+  if(!flag){
+    alert(message);
+  }
+  return flag
 }

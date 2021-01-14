@@ -9,6 +9,7 @@ const typeService = require('./service/TypeService.js');
 const stepService = require('./service/StepService.js');
 const orderService = require('./service/OrderService.js');
 const userService = require('./service/UserService.js');
+const checkService = require('./service/CheckDataService.js');
 
 const router = new Router();
 
@@ -65,14 +66,19 @@ router
   })
   .post('/manage_producer', async ctx => {
     if (ctx.request.user !== undefined) {
-      let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
-        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.new_image.includes('t'),
-        (ctx.request.body.new_image.includes('t')) ? ctx.request.files.image.path : undefined);
-      ctx.status = answer.status;
-      ctx.response.body = {message: answer.message};
+      if (!checkService.checkBodyOfManageProducer(ctx.request)) {
+        ctx.status = 406;
+        ctx.response.body = { message: 'Sent data unacceptable!' };
+      } else {
+        let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
+          ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.new_image.includes('t'),
+          (ctx.request.body.new_image.includes('t')) ? ctx.request.files.image.path : undefined);
+        ctx.status = answer.status;
+        ctx.response.body = { message: answer.message };
+      }
     } else {
       ctx.status = 401;
-      ctx.response.body = {message: 'You are unauthorized.'};
+      ctx.response.body = { message: 'You are unauthorized.' };
     }
   })
   .get('/producers', async ctx => {
@@ -88,10 +94,15 @@ router
   })
   .post('/create_order', async ctx => {
     if (ctx.request.user !== undefined) {
-      let answer = await orderService.createOrder(ctx.request.user, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
-        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
-      ctx.status = answer.status;
-      ctx.response.body = { message: answer.message };
+      if (!checkService.checkBodyOfCreateOrder(ctx.request)) {
+        ctx.status = 406;
+        ctx.response.body = { message: 'Sent data unacceptable!' };
+      } else {
+        let answer = await orderService.createOrder(ctx.request.user, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
+          ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
+        ctx.status = answer.status;
+        ctx.response.body = { message: answer.message };
+      }
     } else {
       ctx.status = 401;
       ctx.response.body = { message: 'You are unauthorized.' };
