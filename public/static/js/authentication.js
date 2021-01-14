@@ -63,7 +63,7 @@ function registration() {
 function get_new_password() {
   let fd = new FormData();
   fd.append('email', document.getElementById('username').value);
-  if (validateEmail(fd.get('username'))) {
+  if (validateEmail(fd.get('email'))) {
     fetch('/forgot_password', { method: 'POST', body: fd })
       .then(data => {
         if (data.status === 200) {
