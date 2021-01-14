@@ -36,7 +36,7 @@ router
     ctx.response.body = { token: answer.token, message: answer.message};
   })
   .post('/change_password', async ctx => {
-    const answer = await workWithToken.changePassword(ctx.cookies.get('token'), ctx.request.body.old_password, ctx.request.body.new_password);
+    const answer = await workWithToken.changePassword(ctx.request.user, ctx.request.body.old_password, ctx.request.body.new_password);
     ctx.response.status = answer.status;
     ctx.response.body = { token: answer.token, message: answer.message};
   })
@@ -58,11 +58,16 @@ router
       ctx.response.body = {message: 'You are unauthorized.'};
     }
   })
+  .get('/manage_producer', async ctx => {
+    if (ctx.request.user !== undefined) {
+      await ctx.render('manage_producer', await producerService.getProducerForRendering(ctx.request.user.id));
+    } else ctx.redirect('/login');
+  })
   .post('/manage_producer', async ctx => {
     if (ctx.request.user !== undefined) {
       let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
-        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.same_image,
-        (ctx.request.body.same_image === true) ? undefined : ctx.request.files.image.path);
+        ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.new_image.includes('t'),
+        (ctx.request.body.new_image.includes('t')) ? ctx.request.files.image.path : undefined);
       ctx.status = answer.status;
       ctx.response.body = {message: answer.message};
     } else {
@@ -125,11 +130,6 @@ router
   .get('/user_room', async ctx => {
     if (ctx.request.user !== undefined) {
       await ctx.render('user_room', { user: ctx.request.user });
-    } else ctx.redirect('/login');
-  })
-  .get('/manage_producer', async ctx => {
-    if (ctx.request.user !== undefined) {
-      await ctx.render('manage_producer', await producerService.getProducerForRendering(ctx.request.user.id));
     } else ctx.redirect('/login');
   });
 

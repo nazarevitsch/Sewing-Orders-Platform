@@ -23,15 +23,14 @@ async function registration(email, password) {
   }
 }
 
-async function changePassword(token, oldPassword, newPassword) {
-  const user = await verifyToken(token);
+async function changePassword(user, oldPassword, newPassword) {
   if (user === undefined) {
     return {token: undefined, status: 401, message: 'You are unauthorized.'};
   } else {
     if (user.password === oldPassword) {
       if (checkPassword(newPassword)) {
-        await userService.updatePasswordByEmail(user.username, newPassword);
-        return {token: createToken(user.username, newPassword), status: 200, message: 'OK.'};
+        await userService.updatePasswordByEmail(user.email, newPassword);
+        return {token: createToken(user.email, newPassword), status: 200, message: 'OK.'};
       } else {
         return {token: undefined, status: 406, message: 'New password is incorrect.'};
       }
@@ -42,7 +41,7 @@ async function changePassword(token, oldPassword, newPassword) {
 }
 
 async function forgotPassword(email) {
-  const user = userService.getUserByEmail(email);
+  const user = await userService.getUserByEmail(email);
   if (user === undefined){
     return {status: 406, message: 'User with such email does not exists.'}
   } else {
@@ -87,7 +86,8 @@ async function verifyToken(token) {
   });
   if (user !== undefined) {
     let userDB = await userService.getUserByEmailAndPassword(user.username, user.password);
-    return (user.username === userDB.email && user.password === userDB.password) ? userDB : undefined;
+    if (userDB === undefined) return undefined;
+    else return (user.username === userDB.email && user.password === userDB.password) ? userDB : undefined;
   } else return undefined;
 }
 

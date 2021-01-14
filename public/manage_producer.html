@@ -25,20 +25,25 @@
         <div style="display: flex; justify-content: space-between">
             <div>
                 <label>Name:<br/>
-                    <input type="text" id="name" value="
+                    <input type="text" id="name"
                     <% if (producer !== undefined) {%>
-                    <%= producer.name %>
-                    <% } %>"
+                    value="<%= producer.name %>"
+                    <% } else {%>
+                    value=""
+                    <% } %>
                     >
                 </label>
             </div>
             <div>
                 <label>Description: <br/>
-                    <textarea id="description" style="width: 400px">
                         <% if (producer !== undefined) {%>
-                    <%= producer.description %>
-                    <% } %>
-                    </textarea>
+                            <textarea id="description" style="width: 400px">
+                                <%= producer.description %>
+                            </textarea>
+                        <% } else {%>
+                            <textarea id="description" style="width: 400px">
+                            </textarea>
+                        <% } %>
                 </label>
 
             </div>
@@ -48,11 +53,13 @@
                 <div style="font-size: 20px">
                     <select id="region_id">
                         <% for (var i = 0; i < regions.length; i++) { %>
-                        <% if (producer.region_id === regions[i].id) {%>
-                        <option value="<%= regions[i].id%>" selected><%= regions[i].region_name%></option>
-                        <% } else { %>
-                        <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
-                        <% } %>
+                        <option value="<%= regions[i].id%>"
+                            <% if(producer !== undefined) {%>
+                                <% if(producer.region_id === regions[i].id) {%>
+                                    selected
+                                <% } %>
+                            <% } %>
+                        ><%= regions[i].region_name%></option>
                         <% } %>
                     </select>
                 </div>
@@ -92,9 +99,11 @@
             </div>
         </div>
         <div>
+            <% if(producer !== undefined) {%>
             <label>Already Image: <br/>
                 <img src="<%= producer.image_link %>">
             </label>
+            <% } %>
             <label>Additional media: <br/>
                 <p>If your manufacture has already an image, you can choose the new one, or remain old one.</p><br/>
                 <input style="border: none; font-size: 18px" type="file" id="file"/>

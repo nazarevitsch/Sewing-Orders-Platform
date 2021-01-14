@@ -44,7 +44,7 @@ function manageProducer() {
   }
   let formData = new FormData();
   formData.append('image', document.getElementById("file").files[0]);
-  formData.append('same_image', (formData.get('image').size === undefined));
+  formData.append('new_image', (formData.get('image').size !== undefined));
   formData.append('producer_name', document.getElementById('name').value);
   formData.append('types', types_for_request);
   formData.append('steps', steps_for_request);

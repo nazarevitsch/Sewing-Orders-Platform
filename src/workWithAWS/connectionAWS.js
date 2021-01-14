@@ -20,6 +20,7 @@ async function uploadFile(fileLocation) {
     Body: file
   }).promise()
     .then(data => {
+      fs.unlinkSync(fileLocation);
       return data.Location;
     })
 }

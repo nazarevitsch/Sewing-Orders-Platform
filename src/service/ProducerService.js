@@ -8,25 +8,17 @@ const regionService = require('./RegionService');
 const stepService = require('./StepService');
 const typesService = require('./TypeService');
 const s3 = require('../workWithAWS/connectionAWS.js');
-const fs = require('fs');
 
-async function manageProducer(user, name, region_id, description, types, steps, sameImage, pathToImage) {
+
+async function manageProducer(user, name, region_id, description, types, steps, newImage, pathToImage) {
   let producer = await getProducerByUserId(user.id);
-  let imageLink;
+  let imageLink = newImage ? await s3.uploadFile(pathToImage) : (producer === undefined ? '' : producer.image_link);
   if (producer === undefined) {
-    imageLink = await s3.uploadFile(pathToImage);
-    fs.unlinkSync(pathToImage);
     let producerId = await ProducerRepository.createProducerAndReturnId(user.id, name, region_id, description, imageLink);
     if (types.length > 0) await ProducerTypesService.addProducersTypes(types, producerId);
     if (steps.length > 0) await ProducerStepsService.addProducersSteps(steps, producerId);
     return { status: 200, message: 'Ok.' };
   } else {
-    if (sameImage === true) {
-      imageLink = producer.image_link;
-    } else {
-      imageLink = await s3.uploadFile(pathToImage);
-      fs.unlinkSync(pathToImage);
-    }
     await ProducerRepository.updateProducer(producer.id, region_id, name, description, imageLink);
     await ProducerStepsService.deleteStepsByProducerId(producer.id);
     await ProducerTypesService.deleteTypesByProducerId(producer.id);
