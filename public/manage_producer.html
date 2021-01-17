@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style/header.css">
     <link rel="stylesheet" href="style/components.css">
     <link rel="stylesheet" href="style/selectFilters.css">
+    <link rel="stylesheet" href="style/creationAndManagement.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,9 +24,9 @@
         <li><a href="/user_room">User Room</a></li>
     </ul>
 </div>
-<div style="padding: 40px">
+<div id="creation">
     <div id="filters">
-        <div style="display: flex; justify-content: space-between">
+        <div id="text-fields">
             <div>
                 <label>Name:<br/>
                     <input type="text" id="name"
@@ -40,55 +41,56 @@
             <div>
                 <label>Description: <br/>
                         <% if (producer !== undefined) {%>
-                            <textarea id="description" style="width: 400px">
-                                <%= producer.description %>
-                            </textarea>
+                            <textarea id="description"><%= producer.description %></textarea>
                         <% } else {%>
-                            <textarea id="description" style="width: 400px">
-                            </textarea>
+                            <textarea id="description"></textarea>
                         <% } %>
                 </label>
 
             </div>
         </div>
         <div>
-            <label style="display: flex">Region:
-                <div style="font-size: 20px">
-                    <select id="region_id">
-                        <% for (var i = 0; i < regions.length; i++) { %>
-                        <option value="<%= regions[i].id%>"
+            <div id="region">
+                <label class="flex">Region:
+                    <div>
+                        <select id="region_id">
+                            <% for (var i = 0; i < regions.length; i++) { %>
+                            <option value="<%= regions[i].id%>"
                             <% if(producer !== undefined) {%>
-                                <% if(producer.region_id === regions[i].id) {%>
-                                    selected
-                                <% } %>
+                            <% if(producer.region_id === regions[i].id) {%>
+                            selected
                             <% } %>
-                        ><%= regions[i].region_name%></option>
-                        <% } %>
-                    </select>
-                </div>
-            </label>
-        </div>
-        <div style="display: flex">
-            <label>Steps:<br/>
-                <div style="width: 800px;">
-                    <% for (var i = 0; i < steps.length; i++) { %>
-                    <div style="margin: 5px;">
-                        <label class="small"><%= steps[i].name %>: <input type="checkbox" name="producer_steps"
-                                                                          value="<%= steps[i].id %>"
-                            <% if (steps[i].checked) {%>
-                            checked
-                            <%}%>
-                        /></label>
+                            <% } %>
+                            ><%= regions[i].region_name%></option>
+                            <% } %>
+                        </select>
                     </div>
-
-                    <% } %>
-                </div>
-            </label>
+                </label>
+            </div>
+        </div>
+        <div class="flex">
             <div>
+                <label class="filter">Steps:<br/>
+                    <div>
+                        <% for (var i = 0; i < steps.length; i++) { %>
+                        <div>
+                            <label class="small"><%= steps[i].name %>: <input type="checkbox" name="producer_steps"
+                                                                              value="<%= steps[i].id %>"
+                                <% if (steps[i].checked) {%>
+                                checked
+                                <%}%>
+                                /></label>
+                        </div>
+
+                        <% } %>
+                    </div>
+                </label>
+            </div>
+            <div class="filter">
                 <label>Types: </label>
-                <div style="font-weight: normal; font-size: 24px; width: 800px">
+                <div>
                     <% for (var i = 0; i < types.length; i++) { %>
-                    <div style="margin: 5px">
+                    <div>
                         <label class="small"><%= types[i].name %>: <input type="checkbox" name="producer_types"
                                                                           value="<%= types[i].id %>"
                             <% if (types[i].checked) {%>
@@ -101,7 +103,7 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div id="media">
             <% if(producer !== undefined) {%>
             <label>Already Image: <br/>
                 <img src="<%= producer.image_link %>">
@@ -109,7 +111,7 @@
             <% } %>
             <label>Additional media: <br/>
                 <p>If your manufacture has already an image, you can choose the new one, or remain old one.</p><br/>
-                <input style="border: none; font-size: 18px" type="file" id="file"/>
+                <input type="file" id="file"/>
             </label>
         </div>
         <button class="beauty" type="button" onclick="manageProducer()">

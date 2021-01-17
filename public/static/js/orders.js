@@ -98,6 +98,7 @@ function openPage(page) {
       region_id: document.getElementById('region_id').value
     },
     success: (data) => {
+      console.log(data);
       document.getElementById('orders').innerHTML = data;
     }
   });

@@ -1,0 +1,15 @@
+h4{
+    color: #4F3B29;
+    font-family: Volkhov;
+}
+table {
+    margin: 40px;
+    width: 80%;
+    border-collapse: collapse;
+    border-style: hidden;
+}
+table td, th {
+    border: dashed 3px #4F3B29;
+    color: #4F3B29;
+    text-align: center;
+}

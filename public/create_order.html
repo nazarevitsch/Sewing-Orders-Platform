@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style/header.css">
     <link rel="stylesheet" href="style/components.css">
     <link rel="stylesheet" href="style/selectFilters.css">
+    <link rel="stylesheet" href="style/creationAndManagement.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,9 +24,9 @@
         <li><a href="/user_room">User Room</a></li>
     </ul>
 </div>
-<div style="padding: 40px">
+<div id="creation">
     <div id="filters">
-        <div style="display: flex; justify-content: space-between">
+        <div id="text-fields">
             <div>
                 <label>Name:<br/>
                     <input type="text" id="name">
@@ -33,20 +34,20 @@
             </div>
             <div>
                 <label>Small Description: <br/>
-                    <textarea id="small_description" style="width: 400px"></textarea>
+                    <textarea id="small_description"></textarea>
                 </label>
 
             </div>
             <div>
                 <label>Description: <br/>
-                    <textarea id="description" style="width: 400px"></textarea>
+                    <textarea id="description"></textarea>
                 </label>
 
             </div>
         </div>
-        <div>
-            <label style="display: flex">Region:
-                <div style="font-size: 20px">
+        <div id="region">
+            <label class="flex">Region:
+                <div>
                     <select id="region_id">
                         <% for (var i = 0; i < regions.length; i++) { %>
                         <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
@@ -55,21 +56,23 @@
                 </div>
             </label>
         </div>
-        <div style="display: flex">
-            <label>Steps:<br/>
-                <div style="width: 800px;">
-                    <% for (var i = 0; i < steps.length; i++) { %>
-                    <div style="margin: 5px;">
-                        <label class="small"><%= steps[i].name %>: <input type="checkbox" name="producer_steps"
-                                                                          value="<%= steps[i].id %>"/></label>
-                    </div>
-
-                    <% } %>
-                </div>
-            </label>
+        <div class="flex">
             <div>
+                <label class="filter">Steps:<br/>
+                    <div>
+                        <% for (var i = 0; i < steps.length; i++) { %>
+                        <div>
+                            <label class="small"><%= steps[i].name %>: <input type="checkbox" name="producer_steps"
+                                                                              value="<%= steps[i].id %>"/></label>
+                        </div>
+
+                        <% } %>
+                    </div>
+                </label>
+            </div>
+            <div class="filter">
                 <label>Types: </label>
-                <div style="font-weight: normal; font-size: 24px; width: 800px">
+                <div>
                     <% for (var i = 0; i < types.length; i++) { %>
                     <div style="margin: 5px">
                         <label class="small"><%= types[i].name %>: <input type="checkbox" name="producer_types"
@@ -80,9 +83,9 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div id="media">
             <label>Additional media: <br/>
-                <input style="border: none; font-size: 18px" type="file" id="file"/>
+                <input type="file" id="file"/>
             </label>
         </div>
         <button class="beauty" type="button" onclick="create_order()">Create Order</button>

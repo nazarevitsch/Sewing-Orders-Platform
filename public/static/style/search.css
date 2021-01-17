@@ -1,0 +1,34 @@
+div#orders p, div#producers p {
+    width: 100px;
+    font-family: Volkhov;
+    color: #4F3B29;
+}
+
+div#adds {
+    width: 25%;
+    text-align: center;
+    border-left: dashed 3px #4F3B29;
+    color: #4F3B29;
+}
+
+div#filters {
+    width: 25%;
+    border-right: dashed 3px #4F3B29;
+}
+
+#body {
+    display: flex;
+    padding: 40px
+}
+
+#region select{
+    font-size: 18px;
+}
+
+div#orders, div#producers{
+    width: 50%;
+}
+
+div#buttons{
+    text-align: center
+}

@@ -10,14 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="style/header.css">
     <link rel="stylesheet" href="style/components.css">
+    <link rel="stylesheet" href="style/search.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Volkhov:ital@0;1&display=swap" rel="stylesheet">
-    <style>
-        div#filters {
-            width: 25%;
-            border-right: dashed 3px #4F3B29;
-        }
-
-    </style>
 </head>
 <body>
 <div id="header">
@@ -30,12 +24,12 @@
         <li><a href="/user_room">User Room</a></li>
     </ul>
 </div>
-<div style="display: flex; padding: 40px">
+<div id="body">
     <div id="filters">
-        <div>
+        <div id="region">
             <div>
                 <label>Region:<br/>
-                    <select style="font-size: 18px;" onchange="openPage(0)" id="region_id">
+                    <select onchange="openPage(0)" id="region_id">
                         <% for (var i = 0; i < regions.length; i++) { %>
                         <option value="<%= regions[i].id%>"><%= regions[i].region_name%></option>
                         <% } %>
@@ -64,31 +58,17 @@
             </div>
         </div>
     </div>
-    <div id="orders" style="width: 50%">
+    <div id="orders">
     </div>
     <div id="adds">
         <h3>Add</h3>
     </div>
 </div>
-<div id="buttons" style="text-align: center">
+<div id="buttons">
     <button class="beauty">Prev</button>
     <button class="beauty">Next</button>
 </div>
 </body>
-<style>
-    div#orders p {
-        width: 100px;
-        font-family: Volkhov;
-        color: #4F3B29;
-    }
-
-    div#adds {
-        width: 25%;
-        text-align: center;
-        border-left: dashed 3px #4F3B29;
-        color: #4F3B29;
-    }
-</style>
 <script>
   openPage(0);
 </script>

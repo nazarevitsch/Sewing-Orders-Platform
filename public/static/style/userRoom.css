@@ -1,0 +1,10 @@
+div#room{
+    padding: 50px 80px;
+}
+div#room h2{
+    color: #4F3B29;
+    font-family: Volkhov;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+}
