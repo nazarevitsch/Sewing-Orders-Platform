@@ -1,4 +1,5 @@
 'use strict';
+const format = require('pg-format');
 
 const client = require('../Connection.js');
 
@@ -28,7 +29,7 @@ async function getOrdersByUserIdAndAvailable(user_id, available) {
 
 async function disableOrderByOrderId(order_id, user_id) {
   return client
-    .query(disOrderByOrderId(order_id, user_id))
+    .query(disOrderByOrderId, [order_id, user_id])
     .then(result => result)
     .catch(err => console.log(err));
 }
@@ -112,7 +113,7 @@ join regions r on r.id = t4.region_id`;
   return answer;
 };
 
-const disOrderByOrderId = (order_id, user_id) => `update orders set available = false where id = ${order_id} and user_id = ${user_id}`;
+const disOrderByOrderId = 'update orders set available = false where id = $1 and user_id = $2';
 
 const selectOrderByUserIdAndAvailable = (user_id, available) => `select id, name, to_char(date_creation, 'DD Mon YYYY') as date from orders 
 where user_id = ${user_id} and available = ${available}`;
