@@ -3,10 +3,11 @@
 const client = require('../Connection.js');
 
 async function getAllSteps() {
-  return client
+  let steps = await client
     .query(selectAllSteps())
     .then(result => result)
     .catch(err => console.log(err));
+  return steps.rows;
 }
 
 const selectAllSteps = () => 'select * from manufacturing_steps';

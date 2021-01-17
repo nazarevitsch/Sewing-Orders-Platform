@@ -10,10 +10,11 @@ async function addProducersTypes(typesList, producer_id) {
 }
 
 async function getTypesByProducerId(producer_id) {
-  return client
+  let types = await client
     .query(selectTypesByProducerId(producer_id))
     .then(result => result)
     .catch(err => console.log(err));
+  return types.rows;
 }
 
 async function deleteTypesByProducerId(producer_id) {

@@ -3,8 +3,7 @@
 const RegionRepository = require('../db/repository/RegionRepository.js');
 
 async function getAllRegions() {
-  const answer = await RegionRepository.selectAllRegions();
-  return answer.rows;
+  return await RegionRepository.selectAllRegions();
 }
 
 module.exports = {

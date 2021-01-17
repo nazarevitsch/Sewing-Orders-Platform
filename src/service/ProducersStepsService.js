@@ -7,8 +7,7 @@ async function addProducersSteps(stepsList, producer_id) {
 }
 
 async function getStepsByProducerId(producer_id) {
-  const answer = await ProducerStepsRepository.getStepsByProducerId(producer_id);
-  return answer.rows;
+  return await ProducerStepsRepository.getStepsByProducerId(producer_id);
 }
 
 async function deleteStepsByProducerId(producer_id) {

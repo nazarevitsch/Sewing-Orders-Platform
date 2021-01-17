@@ -10,10 +10,11 @@ async function addProducersSteps(stepsList, producer_id) {
 }
 
 async function getStepsByProducerId(producer_id) {
-  return client
+  let steps = await client
     .query(selectStepsByProducerId(producer_id))
     .then(result => result)
     .catch(err => console.log(err));
+  return steps.rows;
 }
 
 async function deleteStepsByProducerId(producer_id) {
