@@ -1,0 +1,44 @@
+form{
+    background-color: #FFF6ED;
+    width: 400px;
+    padding: 20px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    border-radius: 20px;
+}
+form label{
+    margin: 10px auto;
+    font-weight: bold;
+}
+form input{
+    border: dashed 1px #4F3B29;
+    border-radius: 20px;
+}
+form button{
+    margin: 10px auto;
+    border-radius: 20px;
+    background-color: #4F3B29;
+    border: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    width: 200px;
+}
+form button:hover{
+    background-color: #bd8450;
+}
+form p, form a{
+    font-weight: bold;
+    color: #4F3B29;
+}
+
+form a{
+    font-weight: bold;
+    color: #4F3B29;
+    text-decoration: underline;
+}
+
+form a:hover{
+    color: #bd8450;
+}

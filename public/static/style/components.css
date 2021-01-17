@@ -1,0 +1,44 @@
+label {
+    margin: 10px auto;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Montserrat;
+}
+
+label.small {
+    font-weight: normal;
+    font-size: 24px;
+}
+
+input, textarea, select {
+    border: dashed 1px #4F3B29;
+    border-radius: 20px;
+}
+
+.beauty {
+    margin: 10px;
+    border-radius: 20px;
+    background-color: #4F3B29;
+    border: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.beauty:hover {
+    background-color: #bd8450;
+}
+
+.beauty-secondary{
+    margin: 10px;
+    border-radius: 20px;
+    background-color: #bd8450;
+    border: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 10px;
+}
+
+div#filters div {
+    margin: 10px;
+}

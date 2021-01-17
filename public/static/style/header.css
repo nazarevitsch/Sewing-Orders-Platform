@@ -1,0 +1,43 @@
+div#header{
+    background-color: #bd8450;
+    background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+div#header h2{
+    font-family: Volkhov;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 36px;
+    color: #ffffff;
+    width: 250px;
+    margin: auto;
+    text-align: center;
+}
+
+div#header ul{
+    display: flex;
+    margin: 10px 40px;
+    justify-content: space-evenly;
+    list-style-type: none;
+    padding: 0;
+}
+
+div#header li{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 5px;
+}
+
+div#header a{
+    text-decoration: none;
+    font-family: Volkhov;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: auto;
+}
