@@ -55,7 +55,8 @@ async function forgotPassword(email) {
     return {status: 406, message: 'User with such email does not exists.'}
   } else {
     const newPassword = await makeKey(10);
-    await userService.updatePasswordByEmail(email, newPassword);
+    const crypto_newPassword = bcrypt.hashSync(newPassword, salt);
+    await userService.updatePasswordByEmail(email, crypto_newPassword);
     await mailSender.sendMail(email, 'New Password', `Your new password: ${newPassword}`);
     return {status: 200, message: 'New password was sent to email.'}
   }
