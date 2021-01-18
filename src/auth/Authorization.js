@@ -35,12 +35,10 @@ async function changePassword(user, oldPassword, newPassword) {
   if (user === undefined) {
     return {token: undefined, status: 401, message: 'You are unauthorized.'};
   } else {
-  //  console.log(old_crypt_password + ' old');
     if (user.password === old_crypt_password) {
 
       if (checkPassword(newPassword)) {
         await userService.updatePasswordByEmail(user.email, new_crypt_password);
-      //  console.log(new_crypt_password + ' new');
         return {token: createToken(user.email, new_crypt_password), status: 200, message: 'OK.'};
       } else {
         return {token: undefined, status: 406, message: 'New password is incorrect.'};
@@ -83,7 +81,6 @@ function checkPassword(password) {
 }
 
 function createToken(username, password) {
-  console.log("Pass from createToken " + password);
   const token = jwt.sign({
     username: username,
     password: password
@@ -97,7 +94,6 @@ async function verifyToken(token) {
     user = data;
   });
   if (user !== undefined) {
-    console.log("Pass from verifyToken " + user.password);
     let userDB = await userService.getUserByEmailAndPassword(user.username, user.password);
     if (userDB === undefined) return undefined;
     else return (user.username === userDB.email && user.password === userDB.password) ? userDB : undefined;
