@@ -1,24 +1,24 @@
 'use strict';
-
 const client = require('../Connection.js');
 
 async function getUserByEmailAndPassword(email, password) {
   const user = await client
-    .query(selectUserByEmailAndPassword(email, password))
+    .query(selectUserByEmailAndPassword, [email, password])
     .then(result => result)
     .catch(err => console.log(err));
   return user.rows[0];
 }
 
-async function isUserExist(email, password){
+async function isUserExist(email, password) {
   const user = await getUserByEmailAndPassword(email, password);
+
   if (user === undefined) return false;
   return user.email === email && user.password === password;
 }
 
 async function isEmailAlreadyUsed(email) {
   const user = await client
-    .query(searchEmail(email))
+    .query(searchEmail, [email])
     .then(result => result)
     .catch(err => console.log(err));
   return user.rowCount > 0;
@@ -26,28 +26,28 @@ async function isEmailAlreadyUsed(email) {
 
 async function createUser(email, password) {
   return client
-    .query(insertUser(email, password))
+    .query(insertUser, [email, password])
     .then(result => result)
     .catch(err => console.log(err));
 }
 
 async function updatePasswordByEmail(email, newPassword) {
   return client
-    .query(updatePassword(email, newPassword))
+    .query(updatePassword, [email, newPassword])
     .then(result => result)
     .catch(err => console.log(err));
 }
 
 async function updatePhoneAndNameOfUser(email, password, name, phone) {
   return client
-    .query(updateExistedUser(email, password, name, phone))
+    .query(updateExistedUser, [email, password, name, phone])
     .then(result => result)
     .catch(err => console.log(err));
 }
 
 async function getUserByEmail(email) {
-  let user = await client
-    .query(selectUserByEmail(email))
+  const user = await client
+    .query(selectUserByEmail, [email])
     .then(result => result)
     .catch(err => console.log(err));
   return user.rowCount === 1 ? user.rows[0] : undefined;
@@ -57,24 +57,24 @@ async function getUserByEmail(email) {
 
 async function deleteUserByEmailAndPassword(email, password) {
   return client
-    .query(deleteUser(email, password))
+    .query(deleteUser, [email, password])
     .then(result => result)
     .catch(err => console.log(err));
 }
 
-const deleteUser = (email, password) => `delete from users where email = '${email}' and password = '${password}'`;
+const deleteUser = 'delete from users where email = $1 and password = $2';
 
-const selectUserByEmail = email => `select * from users where email = '${email}'`;
+const selectUserByEmail = 'select * from users where email = $1';
 
-const updateExistedUser = (email, password, name, phone) => `update users set name = '${name}', phone = '${phone}' where email = '${email}' and password = '${password}'`;
+const updateExistedUser =  'update users set name = $1, phone = $2 where email = $3 and password = $4';
 
-const updatePassword = (email, newPassword) => `update users set password = '${newPassword}' where email = '${email}'`;
+const updatePassword = 'update users set password = $2 where email = $1';
 
-const selectUserByEmailAndPassword = (email, password) => `select * from users where email = '${email}' and password = '${password}'`;
+const selectUserByEmailAndPassword =  'select * from users where email = $1 and password = $2';
 
-const searchEmail = email => `select * from users where email = '${email}'`;
+const searchEmail =  'select * from users where email = $1';
 
-const insertUser = (email, password) => `insert into users(email, password, date_creation) values('${email}', '${password}', current_date)`;
+const insertUser = 'insert into users(email, password, date_creation) values($1, $2, current_date)';
 
 module.exports = {
   updatePhoneAndNameOfUser,

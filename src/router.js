@@ -11,6 +11,8 @@ const orderService = require('./service/OrderService.js');
 const userService = require('./service/UserService.js');
 const checkService = require('./service/CheckDataService.js');
 
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(10);
 const router = new Router();
 
 router
@@ -26,7 +28,7 @@ router
   .post('/login', async ctx => {
     const token = await workWithToken.login(ctx.request.body.username, ctx.request.body.password);
     ctx.response.status = token !== undefined ? 200 : 406;
-    ctx.response.body = { token: token };
+    ctx.response.body = { token };
   })
   .get('/registration', async ctx => {
     await ctx.render('registration');
@@ -34,12 +36,12 @@ router
   .post('/registration', async ctx => {
     const answer = await workWithToken.registration(ctx.request.body.username, ctx.request.body.password);
     ctx.response.status = answer.status;
-    ctx.response.body = { token: answer.token, message: answer.message};
+    ctx.response.body = { token: answer.token, message: answer.message };
   })
   .post('/change_password', async ctx => {
     const answer = await workWithToken.changePassword(ctx.request.user, ctx.request.body.old_password, ctx.request.body.new_password);
     ctx.response.status = answer.status;
-    ctx.response.body = { token: answer.token, message: answer.message};
+    ctx.response.body = { token: answer.token, message: answer.message };
   })
   .get('/forgot_password', async ctx => {
     await ctx.render('forgot_password');
@@ -47,16 +49,16 @@ router
   .post('/forgot_password', async ctx => {
     const answer = await workWithToken.forgotPassword(ctx.request.body.email);
     ctx.response.status = answer.status;
-    ctx.response.body = {message: answer.message};
+    ctx.response.body = { message: answer.message };
   })
   .post('/set_new_user_data', async ctx => {
     if (ctx.request.user !== undefined) {
       const answer = await userService.updatePhoneAndNameOfUser(ctx.request.user.email, ctx.request.user.password, ctx.request.body.name, ctx.request.body.phone_number);
       ctx.status = answer.status;
-      ctx.response.body = {message: answer.message};
+      ctx.response.body = { message: answer.message };
     } else {
       ctx.status = 401;
-      ctx.response.body = {message: 'You are unauthorized.'};
+      ctx.response.body = { message: 'You are unauthorized.' };
     }
   })
   .get('/manage_producer', async ctx => {
@@ -70,7 +72,7 @@ router
         ctx.status = 406;
         ctx.response.body = { message: 'Sent data unacceptable!' };
       } else {
-        let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
+        const answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
           ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.new_image.includes('t'),
           (ctx.request.body.new_image.includes('t')) ? ctx.request.files.image.path : undefined);
         ctx.status = answer.status;
@@ -89,7 +91,7 @@ router
   })
   .get('/create_order', async ctx => {
     if (ctx.request.user !== undefined) {
-      await ctx.render('create_order', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions()});
+      await ctx.render('create_order', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions() });
     } else ctx.redirect('/login');
   })
   .post('/create_order', async ctx => {
@@ -98,7 +100,7 @@ router
         ctx.status = 406;
         ctx.response.body = { message: 'Sent data unacceptable!' };
       } else {
-        let answer = await orderService.createOrder(ctx.request.user, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
+        const answer = await orderService.createOrder(ctx.request.user, ctx.request.body.name, ctx.request.body.region_id, ctx.request.body.small_description,
           ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.files.image.path);
         ctx.status = answer.status;
         ctx.response.body = { message: answer.message };
@@ -132,11 +134,11 @@ router
   })
   .get('/observe_order/:id', async ctx => {
     const order = await orderService.getOrderRegionNameAndPhoneNumberByID(ctx.request.params.id);
-    await ctx.render('observe_order', {showNumber: ctx.request.user !== undefined, order: order});
+    await ctx.render('observe_order', { showNumber: ctx.request.user !== undefined, order });
   })
   .get('/observe_producer/:id', async ctx => {
     const producer = await producerService.getProducerRegionNamePhoneNumberById(ctx.request.params.id);
-    await ctx.render('observe_producer', { showNumber: ctx.request.user !== undefined, producer: producer });
+    await ctx.render('observe_producer', { showNumber: ctx.request.user !== undefined, producer });
   })
   .get('/user_room', async ctx => {
     if (ctx.request.user !== undefined) {

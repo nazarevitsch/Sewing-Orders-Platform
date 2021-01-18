@@ -3,7 +3,7 @@
 const client = require('../Connection.js');
 
 async function getAllTypes() {
-  let types = await client
+  const types = await client
     .query(selectAllTypes())
     .then(result => result)
     .catch(err => console.log(err));

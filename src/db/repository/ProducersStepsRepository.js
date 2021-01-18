@@ -1,5 +1,5 @@
 'use strict';
-
+const format = require('pg-format');
 const client = require('../Connection.js');
 
 async function addProducersSteps(stepsList, producer_id) {
@@ -10,8 +10,8 @@ async function addProducersSteps(stepsList, producer_id) {
 }
 
 async function getStepsByProducerId(producer_id) {
-  let steps = await client
-    .query(selectStepsByProducerId(producer_id))
+  const steps = await client
+    .query(selectStepsByProducerId, [producer_id])
     .then(result => result)
     .catch(err => console.log(err));
   return steps.rows;
@@ -19,20 +19,20 @@ async function getStepsByProducerId(producer_id) {
 
 async function deleteStepsByProducerId(producer_id) {
   return client
-    .query(deleteStepsByProdId(producer_id))
+    .query(deleteStepsByProdId, [producer_id])
     .then(result => result)
     .catch(err => console.log(err));
 }
 
-const deleteStepsByProdId = producer_id => `delete from producers_manufacturing_steps where producer_id = ${producer_id}`;
+const deleteStepsByProdId =  'delete from producers_manufacturing_steps where producer_id = $1';
 
-const selectStepsByProducerId = producer_id => `select * from producers_manufacturing_steps where producer_id = ${producer_id}`;
+const selectStepsByProducerId = 'select * from producers_manufacturing_steps where producer_id = $1';
 
 const insertIntoProducersSteps = (stepsList, producerId) => {
-  let q = `insert into producers_manufacturing_steps(producer_id, manufacturing_step_id)
-values (${producerId}, ${Number(stepsList[0])})`;
+  let q = format(`insert into producers_manufacturing_steps(producer_id, manufacturing_step_id)
+values (%L, %s`, producerId, Number(stepsList[0]));
   for (let i = 1; i < stepsList.length; i++) {
-    q += `, (${producerId}, ${Number(stepsList[i])})`;
+    q += format(', ((%L, %s)', producerId, Number(stepsList[i]));
   }
   return q;
 };

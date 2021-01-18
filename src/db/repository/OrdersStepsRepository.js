@@ -1,5 +1,5 @@
 'use strict';
-
+const format = require('pg-format');
 const client = require('../Connection.js');
 
 async function createOrdersSteps(order_id, steps) {
@@ -10,11 +10,11 @@ async function createOrdersSteps(order_id, steps) {
 }
 
 const insertOrdersSteps = (order_id, steps) => {
-  let answer = `insert into orders_manufacturing_steps(order_id, manufacturing_step_id)`;
+  let answer = 'insert into orders_manufacturing_steps(order_id, manufacturing_step_id)';
   for (let i = 0; i < steps.length; i++) {
     if (i === 0) {
-      answer += `VALUES (${order_id}, ${steps[i]})`;
-    } else answer += `, (${order_id}, ${steps[i]})`;
+      answer += format('VALUES (%L, %L)', order_id, steps[i]);
+    } else answer += format(', (%L, %L)', order_id, steps[i]);
   }
   return answer;
 };
