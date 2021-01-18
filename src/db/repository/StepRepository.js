@@ -3,7 +3,7 @@
 const client = require('../Connection.js');
 
 async function getAllSteps() {
-  let steps = await client
+  const steps = await client
     .query(selectAllSteps())
     .then(result => result)
     .catch(err => console.log(err));

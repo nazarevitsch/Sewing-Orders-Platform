@@ -3,7 +3,7 @@
 const client = require('../Connection.js');
 
 async function selectAllRegions() {
-  let regions = await client
+  const regions = await client
     .query(getAllRegions())
     .then(result => result)
     .catch(err => console.log(err));
