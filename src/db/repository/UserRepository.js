@@ -62,19 +62,19 @@ async function deleteUserByEmailAndPassword(email, password) {
     .catch(err => console.log(err));
 }
 
-const deleteUser = 'delete from users where email = \'$1\' and password = \'$2\'';
+const deleteUser = 'delete from users where email = $1 and password = $2';
 
-const selectUserByEmail = 'select * from users where email = \'$1\'';
+const selectUserByEmail = 'select * from users where email = $1';
 
-const updateExistedUser =  'update users set name = \'$1\', phone = \'$2\' where email = \'$3\' and password = \'$4\'';
+const updateExistedUser =  'update users set name = $1, phone = $2 where email = $3 and password = $4';
 
-const updatePassword = 'update users set password = \'$1\' where email = \'$2\'';
+const updatePassword = 'update users set password = $1 where email = $2';
 
-const selectUserByEmailAndPassword =  'select * from users where email = \'$1\' and password = \'$2\'';
+const selectUserByEmailAndPassword =  'select * from users where email = $1 and password = $2';
 
-const searchEmail =  'select * from users where email = \'$1\'';
+const searchEmail =  'select * from users where email = $1';
 
-const insertUser = 'insert into users(email, password, date_creation) values(\'$1\', \'$2\', current_date)';
+const insertUser = 'insert into users(email, password, date_creation) values($1, $2, current_date)';
 
 module.exports = {
   updatePhoneAndNameOfUser,

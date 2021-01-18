@@ -110,7 +110,7 @@ join regions r on r.id = t4.region_id`, types.length);
   return answer;
 };
 
-const updateProd = 'update producers set name = \'$1\', region_id = $2, description = \'$3\', image_link = \'$4\' where id = $5';
+const updateProd = 'update producers set name = $1, region_id = $2, description = $3, image_link = $4 where id = $5';
 
 const insertIntoProducers = `insert into producers(user_id, name, region_id, date_creation, description, image_link) 
     values ($1, '$2', $3, current_date, '$4', '$5') returning id`;
