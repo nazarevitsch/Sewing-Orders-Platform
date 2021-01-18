@@ -1,8 +1,8 @@
 'use strict';
-
 const client = require('../Connection.js');
 
 async function getUserByEmailAndPassword(email, password) {
+ console.log(password + " Pass from getUser");
   const user = await client
     .query(selectUserByEmailAndPassword, [email, password])
     .then(result => result)
@@ -11,7 +11,9 @@ async function getUserByEmailAndPassword(email, password) {
 }
 
 async function isUserExist(email, password) {
+  console.log(password + " Pass from inUserEx");
   const user = await getUserByEmailAndPassword(email, password);
+
   if (user === undefined) return false;
   return user.email === email && user.password === password;
 }
@@ -25,6 +27,7 @@ async function isEmailAlreadyUsed(email) {
 }
 
 async function createUser(email, password) {
+   console.log(password + " Pass from createUser");
   return client
     .query(insertUser, [email, password])
     .then(result => result)
@@ -32,6 +35,8 @@ async function createUser(email, password) {
 }
 
 async function updatePasswordByEmail(email, newPassword) {
+ // console.log(newPassword);
+  console.log(newPassword + " newPass from updatePass");
   return client
     .query(updatePassword, [email, newPassword])
     .then(result => result)

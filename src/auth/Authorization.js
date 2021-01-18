@@ -5,32 +5,43 @@ const jwt = require('jsonwebtoken');
 const userService = require('../service/UserService.js');
 const mailSender = require('../email/MailSender.js');
 
-async function login(email, password){
-  if ((await userService.isUserExist(email, password))){
-    return createToken(email, password);
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(10);
+
+async function login(email, password) {
+  const crypt_password = bcrypt.hashSync(password, salt);
+  if ((await userService.isUserExist(email, crypt_password))) {
+    return createToken(email, crypt_password);
   }
   return undefined;
 }
 
 async function registration(email, password) {
+
   if (await userService.isEmailAlreadyUsed(email)) {
-    return {token: undefined, status: 406, message: 'Email is already used.'};
+    return { token: undefined, status: 406, message: 'Email is already used.'};
   } else if (checkEmail(email) && checkPassword(password)) {
-    await userService.createUser(email, password);
-    return {token: createToken(email, password), status: 200, message: 'Everything is ok.'}
+    const crypt_password = bcrypt.hashSync(password, salt);
+    await userService.createUser(email, crypt_password);
+    return { token: createToken(email, crypt_password), status: 200, message: 'Everything is ok.'}
   } else {
-    return {token: undefined, status: 406, message: 'Email or Password is wrong!.'}
+    return { token: undefined, status: 406, message: 'Email or Password is wrong!.'}
   }
 }
 
 async function changePassword(user, oldPassword, newPassword) {
+  const old_crypt_password = bcrypt.hashSync(oldPassword, salt);
+  const new_crypt_password = bcrypt.hashSync(newPassword, salt);
   if (user === undefined) {
     return {token: undefined, status: 401, message: 'You are unauthorized.'};
   } else {
-    if (user.password === oldPassword) {
+  //  console.log(old_crypt_password + ' old');
+    if (user.password === old_crypt_password) {
+
       if (checkPassword(newPassword)) {
-        await userService.updatePasswordByEmail(user.email, newPassword);
-        return {token: createToken(user.email, newPassword), status: 200, message: 'OK.'};
+        await userService.updatePasswordByEmail(user.email, new_crypt_password);
+      //  console.log(new_crypt_password + ' new');
+        return {token: createToken(user.email, new_crypt_password), status: 200, message: 'OK.'};
       } else {
         return {token: undefined, status: 406, message: 'New password is incorrect.'};
       }
@@ -72,6 +83,7 @@ function checkPassword(password) {
 }
 
 function createToken(username, password) {
+  console.log("Pass from createToken " + password);
   const token = jwt.sign({
     username: username,
     password: password
@@ -85,6 +97,7 @@ async function verifyToken(token) {
     user = data;
   });
   if (user !== undefined) {
+    console.log("Pass from verifyToken " + user.password);
     let userDB = await userService.getUserByEmailAndPassword(user.username, user.password);
     if (userDB === undefined) return undefined;
     else return (user.username === userDB.email && user.password === userDB.password) ? userDB : undefined;
