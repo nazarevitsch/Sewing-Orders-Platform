@@ -72,8 +72,8 @@ async function getProducerRegionNamePhoneNumberById(id) {
   return (await ProducerRepository.getProducerRegionNamePhoneNumberById(id)).rows[0];
 }
 
-async function deleteProducer(email, password) {
-  await ProducerRepository.deleteProducer((await UserService.getUserIdByEmailAndPassword(email, password)));
+async function deleteProducer(id) {
+  await ProducerRepository.deleteProducer(id);
 }
 
 module.exports = {

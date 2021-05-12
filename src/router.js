@@ -81,6 +81,32 @@ router
       ctx.response.body = { message: 'You are unauthorized.' };
     }
   })
+  .put('/manage_producer', async ctx => {
+    if (ctx.request.user !== undefined) {
+      if (!checkService.checkBodyOfManageProducer(ctx.request)) {
+        ctx.status = 406;
+        ctx.response.body = { message: 'Sent data unacceptable!' };
+      } else {
+        let answer = await producerService.manageProducer(ctx.request.user, ctx.request.body.producer_name, ctx.request.body.region_id,
+          ctx.request.body.description, ctx.request.body.types.split(','), ctx.request.body.steps.split(','), ctx.request.body.new_image.includes('t'),
+          (ctx.request.body.new_image.includes('t')) ? ctx.request.files.image.path : undefined);
+        ctx.status = answer.status;
+        ctx.response.body = { message: answer.message };
+      }
+    } else {
+      ctx.status = 401;
+      ctx.response.body = { message: 'You are unauthorized.' };
+    }
+  })
+  .delete('/manage_producer', async ctx => {
+    if (ctx.request.user !== undefined) {
+      await producerService.deleteProducer(ctx.request.user.id);
+      ctx.status = 200;
+    } else {
+      ctx.status = 401;
+      ctx.response.body = { message: 'You are unauthorized.' };
+    }
+  })
   .get('/producers', async ctx => {
     await ctx.render('producers', { types: await typeService.getAllTypes(), steps: await stepService.getAllSteps(), regions: await regionService.getAllRegions() });
   })

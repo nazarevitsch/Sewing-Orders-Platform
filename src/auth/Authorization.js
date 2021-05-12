@@ -19,7 +19,7 @@ async function registration(email, password) {
     await userService.createUser(email, password);
     return {token: createToken(email, password), status: 200, message: 'Everything is ok.'}
   } else {
-    return {token: undefined, status: 406, message: 'Email or Password is wrong!.'}
+    return {token: undefined, status: 406, message: 'Email or Password is wrong!'}
   }
 }
 
